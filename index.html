@@ -19,22 +19,22 @@
       </div>
 
       <div class="lesson-nav">
-        <button class="lesson-btn active" onclick="showLesson('basics')">
+        <button class="lesson-btn active" onclick="showLesson('basics', event)">
           1. Basics
         </button>
-        <button class="lesson-btn" onclick="showLesson('argparse')">
+        <button class="lesson-btn" onclick="showLesson('argparse', event)">
           2. Argparse
         </button>
-        <button class="lesson-btn" onclick="showLesson('files')">
+        <button class="lesson-btn" onclick="showLesson('files', event)">
           3. File Handling
         </button>
-        <button class="lesson-btn" onclick="showLesson('patterns')">
+        <button class="lesson-btn" onclick="showLesson('patterns', event)">
           4. Common Patterns
         </button>
-        <button class="lesson-btn" onclick="showLesson('compare')">
+        <button class="lesson-btn" onclick="showLesson('compare', event)">
           5. JS vs Python
         </button>
-        <button class="lesson-btn" onclick="showLesson('practice')">
+        <button class="lesson-btn" onclick="showLesson('practice', event)">
           6. Practice
         </button>
       </div>
@@ -42,19 +42,30 @@
       <!-- Lesson 1: Python Basics -->
       <div class="lesson-content active" id="lesson-basics">
         <h2 class="lesson-title">🚀 Python CLI Basics</h2>
+        <p>
+          This section covers the fundamental building blocks for creating any
+          Python command-line interface (CLI) tool. Understanding these concepts
+          is crucial before diving into more complex topics.
+        </p>
 
         <div class="concept-grid">
           <div class="concept-card">
             <div class="concept-title">Shebang Line</div>
             <div class="concept-description">
-              Makes your Python file executable on Unix systems
+              The shebang line (`#!`) at the very top of your Python script
+              tells Unix-like operating systems which interpreter to use to
+              execute the file. This allows you to run your script directly like
+              an executable program (e.g., `./script.py`) instead of explicitly
+              calling the interpreter (e.g., `python3 script.py`).
             </div>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="comment"># At the very top of your file</span>
+                <pre><span class="comment"># At the very top of your file, before any code or comments:</span>
 <span class="highlight">#!/usr/bin/env python3</span>
 
-<span class="comment"># Now you can run: ./script.py instead of python3 script.py</span></pre>
+<span class="comment"># This line finds the 'python3' interpreter in your system's PATH.</span>
+<span class="comment"># After adding this, make your script executable: `chmod +x your_script.py`</span>
+<span class="comment"># Now you can run it directly: `./your_script.py`</span></pre>
               </div>
             </div>
           </div>
@@ -62,13 +73,14 @@
           <div class="concept-card">
             <div class="concept-title">Essential Imports</div>
             <div class="concept-description">
-              Libraries you'll use in every CLI script
+              Python's standard library provides powerful modules for common CLI
+              tasks. These are the imports you'll frequently use.
             </div>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="highlight">import argparse</span>  <span class="comment"># For command-line arguments</span>
-<span class="highlight">import sys</span>       <span class="comment"># For system functions (like stderr)</span>
-<span class="highlight">import os</span>        <span class="comment"># For file/directory operations</span></pre>
+                <pre><span class="highlight">import argparse</span>  <span class="comment"># For parsing command-line arguments (flags, options, positional args)</span>
+<span class="highlight">import sys</span>       <span class="comment"># Provides access to system-specific parameters and functions (e.g., sys.stderr for error output, sys.exit for exiting)</span>
+<span class="highlight">import os</span>        <span class="comment"># For interacting with the operating system (e.g., file paths, directory operations)</span></pre>
               </div>
             </div>
           </div>
@@ -76,37 +88,58 @@
           <div class="concept-card">
             <div class="concept-title">Main Function Pattern</div>
             <div class="concept-description">
-              The standard way to structure Python scripts
+              This is the standard and recommended way to structure Python
+              scripts. It ensures that the `main()` function is called only when
+              the script is executed directly, not when it's imported as a
+              module into another script.
             </div>
             <div class="code-container">
               <div class="code-content">
                 <pre><span class="highlight">def main():</span>
-    <span class="comment"># Your main code goes here</span>
+    <span class="comment"># Your primary script logic goes here.</span>
+    <span class="comment"># This is where you'll define argument parsing, file operations, etc.</span>
     print("Hello, CLI world!")
+    print("This message is printed when the script runs.")
 
 <span class="highlight">if __name__ == "__main__":</span>
+    <span class="comment"># This conditional block checks if the script is being run directly.</span>
+    <span class="comment"># If true, it calls the main() function.</span>
     main()
 
-<span class="comment"># This means: "If this file is run directly, call main()"</span></pre>
+<span class="comment"># Code outside main() and this block would run on import.</span></pre>
               </div>
             </div>
           </div>
 
           <div class="concept-card">
-            <div class="concept-title">Error Handling</div>
+            <div class="concept-title">Error Handling & `sys.stderr`</div>
             <div class="concept-description">
-              How to handle errors gracefully in CLI tools
+              Robust CLI tools provide clear error messages and handle
+              unexpected situations gracefully. `sys.stderr` is used for
+              printing error messages, separating them from normal program
+              output.
             </div>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="highlight">try:</span>
-    <span class="comment"># Attempt something risky</span>
-    with open("file.txt", "r") as f:
+                <pre><span class="highlight">import sys</span>
+
+<span class="highlight">try:</span>
+    <span class="comment"># Attempt a potentially risky operation, like opening a file that might not exist.</span>
+    with open("non_existent_file.txt", "r") as f:
         content = f.read()
+    print("File read successfully!")
 <span class="highlight">except FileNotFoundError:</span>
-    print("Error: File not found", <span class="highlight">file=sys.stderr</span>)
+    <span class="comment"># Catch a specific error: if the file doesn't exist.</span>
+    print("Error: File not found!", <span class="highlight">file=sys.stderr</span>)
+    sys.exit(1) <span class="comment"># Exit with a non-zero status code (convention for errors)</span>
+<span class="highlight">except PermissionError:</span>
+    <span class="comment"># Catch another specific error: if you don't have read permissions.</span>
+    print("Error: Permission denied to access file.", <span class="highlight">file=sys.stderr</span>)
+    sys.exit(1)
 <span class="highlight">except Exception as error:</span>
-    print(f"Error: {error}", <span class="highlight">file=sys.stderr</span>)</pre>
+    <span class="comment"># Catch any other unexpected errors.</span>
+    print(f"An unexpected error occurred: {error}", <span class="highlight">file=sys.stderr</span>)
+    sys.exit(1)</pre>
               </div>
             </div>
           </div>
@@ -120,13 +153,23 @@
           </div>
           <div>
             <span class="prompt">$ </span
+            ><span class="command"
+              >echo 'print("Hello from a new file!")' > hello.py</span
+            >
+          </div>
+          <div>
+            <span class="prompt">$ </span
             ><span class="command">chmod +x hello.py</span>
           </div>
           <div>
             <span class="prompt">$ </span
             ><span class="command">./hello.py</span>
           </div>
-          <div class="output">Hello, CLI world!</div>
+          <div class="output">Hello from a new file!</div>
+          <div>
+            <span class="prompt">$ </span
+            ><span class="command">rm hello.py</span>
+          </div>
         </div>
       </div>
 
@@ -135,19 +178,27 @@
         <h2 class="lesson-title">⚙️ Mastering Argparse</h2>
 
         <p style="font-size: 1.1rem; margin-bottom: 25px">
-          Argparse is Python's built-in library for handling command-line
-          arguments. Think of it as Python's version of Commander.js!
+          `argparse` is Python's built-in library for handling command-line
+          arguments. It allows you to define the arguments your script expects,
+          parse them from the command line, and automatically generate help and
+          usage messages.
         </p>
 
         <div class="step-by-step">
           <div class="step">
             <span class="step-number">1</span>
             <strong>Create the Parser</strong>
+            <p>
+              Start by creating an `ArgumentParser` object. This object will
+              hold all the information about your program's arguments.
+            </p>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="highlight">parser = argparse.ArgumentParser(</span>
-    <span class="highlight">prog="mycommand",</span>           <span class="comment"># Name of your command</span>
-    <span class="highlight">description="What it does"</span>   <span class="comment"># Shows in --help</span>
+                <pre><span class="highlight">import argparse</span>
+
+<span class="highlight">parser = argparse.ArgumentParser(</span>
+    <span class="highlight">prog="mycommand",</span>           <span class="comment"># The name of your command (e.g., 'cat', 'ls')</span>
+    <span class="highlight">description="A brief description of what your command does."</span>   <span class="comment"># Text shown in the --help message</span>
 <span class="highlight">)</span></pre>
               </div>
             </div>
@@ -156,16 +207,21 @@
           <div class="step">
             <span class="step-number">2</span>
             <strong>Add Flags (Optional Arguments)</strong>
+            <p>
+              Flags, also known as options, are arguments that start with a
+              hyphen (e.g., `-v`, `--verbose`). They are optional and typically
+              modify the behavior of the command.
+            </p>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="comment"># Boolean flag (True/False)</span>
-parser.add_argument(<span class="highlight">"-v", "--verbose"</span>, action="store_true", help="Verbose output")
+                <pre><span class="comment"># Boolean flag: If present, its value becomes True; otherwise, False.</span>
+parser.add_argument(<span class="highlight">"-v", "--verbose"</span>, action="store_true", help="Enable verbose output for more details.")
 
-<span class="comment"># Flag that takes a value</span>
-parser.add_argument(<span class="highlight">"-n", "--number"</span>, type=int, help="A number")
+<span class="comment"># Flag that takes a value: The 'type' argument specifies the data type.</span>
+parser.add_argument(<span class="highlight">"-n", "--number"</span>, type=int, help="Specify a number for a specific operation.")
 
-<span class="comment"># Flag with default value</span>
-parser.add_argument(<span class="highlight">"-f", "--format"</span>, default="json", help="Output format")</pre>
+<span class="comment"># Flag with a default value: If the flag is not provided, this default is used.</span>
+parser.add_argument(<span class="highlight">"-f", "--format"</span>, default="json", help="Choose the output format (e.g., 'json', 'csv'). Default is 'json'.")</pre>
               </div>
             </div>
           </div>
@@ -173,65 +229,121 @@ parser.add_argument(<span class="highlight">"-f", "--format"</span>, default="js
           <div class="step">
             <span class="step-number">3</span>
             <strong>Add Arguments (Required/Positional)</strong>
+            <p>
+              Positional arguments are required and don't start with a hyphen.
+              Their order matters.
+            </p>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="comment"># Required argument</span>
-parser.add_argument(<span class="highlight">"filename"</span>, help="File to process")
+                <pre><span class="comment"># Required positional argument: The user MUST provide this value.</span>
+parser.add_argument(<span class="highlight">"filename"</span>, help="The path to the file that needs to be processed.")
 
-<span class="comment"># Optional argument with default</span>
-parser.add_argument(<span class="highlight">"output"</span>, nargs="?", default="output.txt", help="Output file")
+<span class="comment"># Optional positional argument with a default: 'nargs="?"' makes it optional.</span>
+parser.add_argument(<span class="highlight">"output"</span>, nargs="?", default="output.txt", help="Specify an output file. Defaults to 'output.txt'.")
 
-<span class="comment"># Multiple files</span>
-parser.add_argument(<span class="highlight">"files"</span>, nargs="+", help="One or more files")</pre>
+<span class="comment"># Multiple files: 'nargs="+"' means one or more arguments are required.</span>
+parser.add_argument(<span class="highlight">"files"</span>, nargs="+", help="Provide one or more files to operate on.")
+
+<span class="comment"># Zero or more arguments: 'nargs="*"'.</span>
+parser.add_argument(<span class="highlight">"optional_items"</span>, nargs="*", help="Zero or more optional items.")</pre>
               </div>
             </div>
           </div>
 
           <div class="step">
             <span class="step-number">4</span>
-            <strong>Parse and Use</strong>
+            <strong>Parse and Use Arguments</strong>
+            <p>
+              After defining all your arguments, call `parser.parse_args()` to
+              process the command-line input. The result is an object where
+              arguments are accessible as attributes.
+            </p>
             <div class="code-container">
               <div class="code-content">
                 <pre><span class="highlight">args = parser.parse_args()</span>
 
-<span class="comment"># Now use the arguments</span>
+<span class="comment"># Now you can easily access the values provided by the user:</span>
 if args.verbose:
-    print("Verbose mode enabled!")
+    print("Verbose mode enabled! Showing extra details.")
 
-print(f"Processing {args.filename}")
-for file in args.files:
-    print(f"File: {file}")</pre>
+print(f"Processing the file: {args.filename}")
+print(f"Output will be saved to: {args.output}")
+
+if args.number is not None:
+    print(f"Using provided number: {args.number}")
+
+if args.files:
+    print("Files to process:")
+    for file in args.files:
+        print(f"  - {file}")</pre>
               </div>
             </div>
           </div>
         </div>
 
         <div class="interactive-example">
-          <h3>🎯 Real Example: Our Cat Command</h3>
+          <h3>🎯 Real Example: Our Cat Command Argparse Setup</h3>
+          <p>
+            This is how the `argparse` setup would look for a simplified `cat`
+            command, which prints file contents.
+          </p>
           <div class="code-container">
             <div class="code-header">
               <div class="code-title">Complete Cat Command Argparse Setup</div>
               <button class="copy-btn" onclick="copyCode(this)">Copy</button>
             </div>
             <div class="code-content">
-              <pre>parser = argparse.ArgumentParser(
+              <pre>import argparse
+import sys
+
+parser = argparse.ArgumentParser(
     prog="cat",
-    description="Print file contents"
+    description="Concatenate files and print to standard output."
 )
 
-<span class="comment"># Flags for line numbering</span>
-parser.add_argument("-n", action="store_true", help="Number all lines")
-parser.add_argument("-b", action="store_true", help="Number non-blank lines only")
+<span class="comment"># Flag for line numbering: -n or --number-lines</span>
+parser.add_argument(
+    "-n", "--number-lines",
+    action="store_true",
+    help="Number all output lines."
+)
 
-<span class="comment"># Files to read (at least one required)</span>
-parser.add_argument("files", nargs="+", help="Files to read")
+<span class="comment"># Flag for non-blank line numbering: -b or --number-nonblank</span>
+parser.add_argument(
+    "-b", "--number-nonblank",
+    action="store_true",
+    help="Number non-blank output lines, overrides -n."
+)
 
-<span class="comment"># Parse command line</span>
+<span class="comment"># Positional argument for files: nargs="+" means one or more files are required.</span>
+parser.add_argument(
+    "files",
+    nargs="+",
+    help="The files to read and concatenate."
+)
+
+<span class="comment"># Parse command line arguments</span>
 args = parser.parse_args()
 
-<span class="comment"># Use the arguments</span>
-for file in args.files:
-    <span class="comment"># Process each file...</span></pre>
+<span class="comment"># Example of using the arguments:</span>
+<span class="comment"># for file in args.files:</span>
+<span class="comment">#     try:</span>
+<span class="comment">#         with open(file, "r", encoding="utf-8") as f:</span>
+<span class="comment">#             content = f.read()</span>
+<span class="comment">#         lines = content.split("\n")</span>
+<span class="comment">#         line_num = 1</span>
+<span class="comment">#         for line in lines:</span>
+<span class="comment">#             prefix = ""</span>
+<span class="comment">#             if args.number_nonblank and line.strip() != "":</span>
+<span class="comment">#                 prefix = str(line_num).rjust(6) + "  "</span>
+<span class="comment">#                 line_num += 1</span>
+<span class="comment">#             elif args.number_lines:</span>
+<span class="comment">#                 prefix = str(line_num).rjust(6) + "  "</span>
+<span class="comment">#                 line_num += 1</span>
+<span class="comment">#             print(prefix + line)</span>
+<span class="comment">#     except FileNotFoundError:</span>
+<span class="comment">#         print(f"cat: {file}: No such file or directory", file=sys.stderr)</span>
+</pre>
             </div>
           </div>
         </div>
@@ -240,83 +352,143 @@ for file in args.files:
       <!-- Lesson 3: File Handling -->
       <div class="lesson-content" id="lesson-files">
         <h2 class="lesson-title">📁 File Handling Like a Pro</h2>
+        <p>
+          CLI tools often interact with the file system. Python provides robust
+          and easy-to-use modules for reading, writing, and managing files and
+          directories.
+        </p>
 
         <div class="concept-grid">
           <div class="concept-card">
-            <div class="concept-title">Reading Files</div>
+            <div class="concept-title">Reading Files Safely (`with open`)</div>
             <div class="concept-description">
-              The Python way to read files safely
+              The `with open(...)` statement is the most Pythonic and safest way
+              to handle files. It ensures that the file is automatically closed
+              even if errors occur, preventing resource leaks.
             </div>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="comment"># The RIGHT way (automatic cleanup)</span>
-<span class="highlight">with open("file.txt", "r", encoding="utf-8") as f:</span>
-    content = f.read()
-    lines = content.split("\n")
+                <pre><span class="comment"># Open 'data.txt' for reading ('r'), specifying UTF-8 encoding.</span>
+<span class="highlight">with open("data.txt", "r", encoding="utf-8") as f:</span>
+    content = f.read()  <span class="comment"># Reads the entire file content as a single string.</span>
+    lines = content.split("\n") <span class="comment"># Splits the content into a list of lines.</span>
 
-<span class="comment"># File automatically closes when done!</span></pre>
+print("File content read successfully!")
+<span class="comment"># The file 'f' is automatically closed here, even if an error happened inside the 'with' block.</span>
+
+<span class="comment"># To read line by line (more memory efficient for large files):</span>
+<span class="highlight">with open("large_data.txt", "r", encoding="utf-8") as f:</span>
+    for line in f: <span class="comment"># Iterates over lines without loading entire file into memory.</span>
+        print(line.strip()) <span class="comment"># Process each line.</span></pre>
               </div>
             </div>
           </div>
 
           <div class="concept-card">
-            <div class="concept-title">Directory Operations</div>
+            <div class="concept-title">Directory Operations (`os` module)</div>
             <div class="concept-description">
-              Working with directories and file listings
+              The `os` module provides functions for interacting with the
+              operating system, including listing directory contents, checking
+              paths, and manipulating files/directories.
             </div>
             <div class="code-container">
               <div class="code-content">
                 <pre><span class="highlight">import os</span>
 
-<span class="comment"># List directory contents</span>
-files = <span class="highlight">os.listdir(".")</span>  <span class="comment"># Current directory</span>
-files = <span class="highlight">os.listdir("/home")</span>  <span class="comment"># Specific path</span>
+<span class="comment"># List contents of the current directory ('.') or a specific path.</span>
+files_in_current_dir = <span class="highlight">os.listdir(".")</span>
+print(f"Files in current directory: {files_in_current_dir}")
 
-<span class="comment"># Check if path exists</span>
-if <span class="highlight">os.path.exists("file.txt")</span>:
-    print("File exists!")</pre>
+files_in_home = <span class="highlight">os.listdir("/home/user")</span> <span class="comment"># Example path</span>
+print(f"Files in /home/user: {files_in_home}")
+
+<span class="comment"># Check if a path exists (file or directory).</span>
+if <span class="highlight">os.path.exists("my_script.py")</span>:
+    print("my_script.py exists!")
+
+<span class="comment"># Check if a path is a file or a directory.</span>
+if <span class="highlight">os.path.isfile("data.txt")</span>:
+    print("data.txt is a file.")
+if <span class="highlight">os.path.isdir("my_folder/")</span>:
+    print("my_folder/ is a directory.")
+
+<span class="comment"># Joining path components safely (handles '/' or '\' correctly).</span>
+full_path = <span class="highlight">os.path.join("my_folder", "sub_folder", "file.txt")</span>
+print(f"Joined path: {full_path}")</pre>
               </div>
             </div>
           </div>
 
           <div class="concept-card">
-            <div class="concept-title">String Operations</div>
+            <div class="concept-title">Common String Operations</div>
             <div class="concept-description">
-              Common text processing you'll need
+              Text processing is a core part of CLI tools. Python's string
+              methods are very powerful for manipulating and analyzing text
+              data.
             </div>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="comment"># Split text into lines</span>
-lines = text.<span class="highlight">split("\n")</span>
+                <pre>text = "  Hello World!  \\nThis is a test. "
 
-<span class="comment"># Split into words (removes extra spaces)</span>
+<span class="comment"># Split text into a list of lines.</span>
+lines = text.<span class="highlight">split("\\n")</span>
+print(f"Lines: {lines}") <span class="comment"># Output: ['  Hello World!  ', 'This is a test. ']</span>
+
+<span class="comment"># Remove leading/trailing whitespace and split into words.</span>
 words = text.<span class="highlight">strip().split()</span>
+print(f"Words: {words}") <span class="comment"># Output: ['Hello', 'World!', 'This', 'is', 'a', 'test.']</span>
 
-<span class="comment"># Right-align numbers (like padStart in JS)</span>
-number_str = str(42).<span class="highlight">rjust(6)</span>  <span class="comment"># "    42"</span>
+<span class="comment"># Right-align a string with padding (useful for formatting output columns).</span>
+number_str = str(42).<span class="highlight">rjust(6)</span>  <span class="comment"># "    42" (pads with spaces to a total length of 6)</span>
+print(f"Right-aligned: '{number_str}'")
 
-<span class="comment"># Count bytes in UTF-8</span>
-byte_count = len(text.<span class="highlight">encode("utf-8")</span>)</pre>
+<span class="comment"># Count bytes in a string using a specific encoding (e.g., UTF-8).</span>
+byte_count = len(text.<span class="highlight">encode("utf-8")</span>)
+print(f"Byte count (UTF-8): {byte_count}")
+
+<span class="comment"># Check if a string starts or ends with a specific substring.</span>
+if text.startswith("  Hello"):
+    print("Starts with '  Hello'")
+if text.endswith("test. "):
+    print("Ends with 'test. '")</pre>
               </div>
             </div>
           </div>
 
           <div class="concept-card">
-            <div class="concept-title">Error Handling</div>
+            <div class="concept-title">Robust Error Handling for Files</div>
             <div class="concept-description">
-              Handle common file errors gracefully
+              When dealing with files, various errors can occur (file not found,
+              permission issues, invalid encoding). Using `try-except` blocks
+              makes your CLI tools more resilient.
             </div>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="highlight">try:</span>
-    with open(filename, "r") as f:
+                <pre><span class="highlight">import sys</span>
+
+filename = "non_existent.txt" <span class="comment"># Example filename</span>
+
+<span class="highlight">try:</span>
+    <span class="comment"># Attempt to open and read the file.</span>
+    with open(filename, "r", encoding="utf-8") as f:
         content = f.read()
+    print(f"Successfully read {filename}")
 <span class="highlight">except FileNotFoundError:</span>
-    print(f"{filename}: No such file")
+    <span class="comment"># Catch error if the file does not exist.</span>
+    print(f"Error: '{filename}' not found. Please check the path.", <span class="highlight">file=sys.stderr</span>)
+    sys.exit(1)
 <span class="highlight">except PermissionError:</span>
-    print(f"{filename}: Permission denied")
+    <span class="comment"># Catch error if the script lacks necessary permissions.</span>
+    print(f"Error: Permission denied to read '{filename}'.", <span class="highlight">file=sys.stderr</span>)
+    sys.exit(1)
+<span class="highlight">except UnicodeDecodeError:</span>
+    <span class="comment"># Catch error if the file encoding is not UTF-8.</span>
+    print(f"Error: Could not decode '{filename}' with UTF-8. Try a different encoding.", <span class="highlight">file=sys.stderr</span>)
+    sys.exit(1)
 <span class="highlight">except Exception as e:</span>
-    print(f"{filename}: {e}")</pre>
+    <span class="comment"># Catch any other unexpected errors during file operations.</span>
+    print(f"An unexpected error occurred with '{filename}': {e}", <span class="highlight">file=sys.stderr</span>)
+    sys.exit(1)</pre>
               </div>
             </div>
           </div>
@@ -324,35 +496,62 @@ byte_count = len(text.<span class="highlight">encode("utf-8")</span>)</pre>
 
         <div class="interactive-example">
           <h3>🔍 Real Example: Our WC Command File Processing</h3>
+          <p>
+            This code snippet demonstrates the core logic for counting lines,
+            words, and bytes, similar to the Unix `wc` (word count) command.
+          </p>
           <div class="code-container">
             <div class="code-header">
-              <div class="code-title">WC Command File Processing</div>
+              <div class="code-title">WC Command File Processing Logic</div>
               <button class="copy-btn" onclick="copyCode(this)">Copy</button>
             </div>
             <div class="code-content">
-              <pre>def count_stats(text):
-    <span class="comment"># Count lines (split creates list, subtract 1)</span>
-    lines = len(text.split("\n")) - 1
+              <pre>import sys
+import os
+
+def count_stats(text):
+    <span class="comment">"""Counts lines, words, and bytes in a given text string."""</span>
+    <span class="comment"># Count lines: Split by newline. An empty file or a file without a trailing newline</span>
+    <span class="comment"># might result in len(split) being 1. For wc-like behavior, we typically count actual lines.</span>
+    <span class="comment"># If the text ends with a newline, split() will produce an empty string at the end,</span>
+    <span class="comment"># which is usually ignored for line counting.</span>
+    lines = text.count('\\n') if text else 0
+    if text and not text.endswith('\\n'): # If last line doesn't end with newline, it's still a line
+        lines += 1
     
-    <span class="comment"># Count words (split() handles multiple spaces)</span>
+    <span class="comment"># Count words: Use strip() to remove leading/trailing whitespace, then split()</span>
+    <span class="comment"># split() without arguments handles multiple spaces between words correctly.</span>
     words = len(text.strip().split())
     
-    <span class="comment"># Count bytes in UTF-8 encoding</span>
+    <span class="comment"># Count bytes: Encode the string to UTF-8 and get its length.</span>
     bytes_count = len(text.encode("utf-8"))
     
     return {"lines": lines, "words": words, "bytes": bytes_count}
 
-<span class="comment"># Usage in main loop</span>
-for filename in args.files:
+<span class="comment"># Example Usage in a main loop (assuming 'args.files' contains a list of filenames)</span>
+<span class="comment"># For demonstration, let's simulate a file list:</span>
+simulated_files = ["example.txt", "non_existent_file.txt"]
+
+<span class="comment"># Create a dummy file for demonstration</span>
+with open("example.txt", "w", encoding="utf-8") as f:
+    f.write("Hello world\\nThis is a test.\\n")
+
+for filename in simulated_files:
     try:
         with open(filename, "r", encoding="utf-8") as f:
             text = f.read()
         
         stats = count_stats(text)
+        <span class="comment"># Print formatted output: 7 characters wide for each number, right-aligned.</span>
         print(f"{stats['lines']:7} {stats['words']:7} {stats['bytes']:7} {filename}")
         
     except FileNotFoundError:
-        print(f"wc: {filename}: No such file or directory", file=sys.stderr)</pre>
+        print(f"wc: {filename}: No such file or directory", file=sys.stderr)
+    except Exception as error:
+        print(f"wc: {filename}: An error occurred: {error}", file=sys.stderr)
+
+<span class="comment"># Clean up dummy file</span>
+os.remove("example.txt")</pre>
             </div>
           </div>
         </div>
@@ -363,37 +562,49 @@ for filename in args.files:
         <h2 class="lesson-title">🎨 Common CLI Patterns</h2>
 
         <p style="font-size: 1.1rem; margin-bottom: 25px">
-          Every CLI tool follows similar patterns. Master these and you can
-          build any command-line tool!
+          Building CLI tools often involves recurring structural and logical
+          patterns. Understanding these patterns will make your development
+          process more efficient and your tools more robust.
         </p>
 
         <div class="step-by-step">
           <div class="step">
             <span class="step-number">1</span>
             <strong>The Universal CLI Structure</strong>
+            <p>
+              Most Python CLI tools follow a similar architectural pattern for
+              initialization, argument parsing, and execution flow.
+            </p>
             <div class="code-container">
               <div class="code-content">
                 <pre>#!/usr/bin/env python3
 import argparse
 import sys
 
-def main():
-    <span class="comment"># 1. Parse arguments</span>
-    parser = argparse.ArgumentParser(...)
+<span class="highlight">def process_item(item):</span>
+    <span class="comment">"""Placeholder function for the core logic on each item."""</span>
+    <span class="comment"># In a real tool, this would do the actual work (e.g., read file, transform data)</span>
+    return f"Processed: {item.upper()}"
+
+<span class="highlight">def main():</span>
+    <span class="comment"># 1. Parse arguments: Define and process command-line inputs.</span>
+    parser = argparse.ArgumentParser(description="A universal CLI tool template.")
+    parser.add_argument("inputs", nargs="+", help="One or more input items to process.")
     args = parser.parse_args()
     
-    <span class="comment"># 2. Process each input</span>
+    <span class="comment"># 2. Process each input: Iterate through the inputs provided by the user.</span>
     for item in args.inputs:
-        try:
-            <span class="comment"># 3. Do the work</span>
+        <span class="highlight">try:</span>
+            <span class="comment"># 3. Do the work: Call the function that performs the main task.</span>
             result = process_item(item)
-            <span class="comment"># 4. Output result</span>
+            <span class="comment"># 4. Output result: Print the result to standard output.</span>
             print(result)
-        except Exception as e:
-            <span class="comment"># 5. Handle errors</span>
-            print(f"Error: {e}", file=sys.stderr)
+        <span class="highlight">except Exception as e:</span>
+            <span class="comment"># 5. Handle errors: Catch any exceptions and print error messages to stderr.</span>
+            print(f"Error processing '{item}': {e}", file=sys.stderr)
 
-if __name__ == "__main__":
+<span class="highlight">if __name__ == "__main__":</span>
+    <span class="comment"># Ensure main() is called only when the script is executed directly.</span>
     main()</pre>
               </div>
             </div>
@@ -402,25 +613,50 @@ if __name__ == "__main__":
           <div class="step">
             <span class="step-number">2</span>
             <strong>File Processing Pattern</strong>
+            <p>
+              Many CLI tools operate on files. This pattern outlines the typical
+              workflow: read content, process it, and then output the results.
+            </p>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="comment"># Pattern: Read → Process → Output</span>
-for filename in args.files:
-    try:
-        <span class="comment"># READ</span>
+                <pre><span class="comment"># Pattern: Read File Content → Process Data → Output Results</span>
+import sys
+import os
+
+<span class="highlight">def process_line(line):</span>
+    <span class="comment">"""Example: Converts a line to uppercase."""</span>
+    return line.upper()
+
+<span class="highlight"># Assuming 'args.files' is a list of filenames from argparse.</span>
+simulated_files = ["file1.txt", "file2.txt"]
+
+<span class="comment"># Create dummy files for demonstration</span>
+with open("file1.txt", "w") as f: f.write("line one\\nline two")
+with open("file2.txt", "w") as f: f.write("another line\\nlast line")
+
+for filename in simulated_files:
+    <span class="highlight">try:</span>
+        <span class="comment"># READ: Open and read the entire file content.</span>
         with open(filename, "r", encoding="utf-8") as f:
             content = f.read()
         
-        <span class="comment"># PROCESS</span>
-        lines = content.split("\n")
+        <span class="comment"># PROCESS: Split content into lines and apply a processing function to each.</span>
+        lines = content.split("\\n")
         processed_lines = [process_line(line) for line in lines]
         
-        <span class="comment"># OUTPUT</span>
+        <span class="comment"># OUTPUT: Print the processed lines.</span>
+        print(f"--- Processing {filename} ---")
         for line in processed_lines:
             print(line)
             
-    except FileNotFoundError:
-        print(f"Error: {filename} not found", file=sys.stderr)</pre>
+    <span class="highlight">except FileNotFoundError:</span>
+        print(f"Error: '{filename}' not found.", file=sys.stderr)
+    <span class="highlight">except Exception as e:</span>
+        print(f"Error processing '{filename}': {e}", file=sys.stderr)
+
+<span class="comment"># Clean up dummy files</span>
+os.remove("file1.txt")
+os.remove("file2.txt")</pre>
               </div>
             </div>
           </div>
@@ -428,23 +664,43 @@ for filename in args.files:
           <div class="step">
             <span class="step-number">3</span>
             <strong>Conditional Output Pattern</strong>
+            <p>
+              Many CLI tools offer various output options (e.g., show lines,
+              words, or bytes for `wc`). This pattern demonstrates how to
+              conditionally format output based on user-provided flags.
+            </p>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="comment"># Pattern: Different output based on flags</span>
-def format_output(data, args):
-    output = ""
+                <pre><span class="comment"># Pattern: Generate output based on specific flags or show all by default.</span>
+<span class="highlight">def format_output(data, filename, args):</span>
+    <span class="comment">"""Formats output based on provided data and argparse arguments."""</span>
+    output_parts = []
     
-    <span class="comment"># Show all if no specific flags</span>
-    show_all = not (args.lines or args.words or args.bytes)
+    <span class="comment"># Determine if all stats should be shown (if no specific flags are set).</span>
+    show_all = not (getattr(args, 'lines', False) or getattr(args, 'words', False) or getattr(args, 'bytes', False))
     
-    if args.lines or show_all:
-        output += f"{data['lines']:7}"
-    if args.words or show_all:
-        output += f"{data['words']:7}"
-    if args.bytes or show_all:
-        output += f"{data['bytes']:7}"
+    if getattr(args, 'lines', False) or show_all:
+        output_parts.append(f"{data['lines']:7}") <span class="comment"># Right-align with 7 spaces</span>
+    if getattr(args, 'words', False) or show_all:
+        output_parts.append(f"{data['words']:7}")
+    if getattr(args, 'bytes', False) or show_all:
+        output_parts.append(f"{data['bytes']:7}")
     
-    return output + f" {filename}"</pre>
+    return " ".join(output_parts) + f" {filename}"
+
+<span class="comment"># Example usage (assuming 'args' object with 'lines', 'words', 'bytes' attributes)</span>
+<span class="comment"># For demonstration, let's create a dummy args object:</span>
+class MockArgs:
+    def __init__(self, lines=False, words=False, bytes=False):
+        self.lines = lines
+        self.words = words
+        self.bytes = bytes
+
+mock_data = {"lines": 100, "words": 500, "bytes": 2500}
+
+print(format_output(mock_data, "document.txt", MockArgs())) <span class="comment"># Shows all (default)</span>
+print(format_output(mock_data, "document.txt", MockArgs(lines=True))) <span class="comment"># Shows only lines</span>
+print(format_output(mock_data, "document.txt", MockArgs(words=True, bytes=True))) <span class="comment"># Shows words and bytes</span></pre>
               </div>
             </div>
           </div>
@@ -452,26 +708,51 @@ def format_output(data, args):
           <div class="step">
             <span class="step-number">4</span>
             <strong>Accumulator Pattern (Totals)</strong>
+            <p>
+              For tools that process multiple items (e.g., multiple files), it's
+              common to accumulate totals and display a summary at the end.
+            </p>
             <div class="code-container">
               <div class="code-content">
-                <pre><span class="comment"># Pattern: Keep running totals</span>
-total = {"lines": 0, "words": 0, "bytes": 0}
+                <pre><span class="comment"># Pattern: Initialize totals, process items, update totals, display summary.</span>
+import sys
+import os
 
-for filename in args.files:
-    <span class="comment"># Process file and get stats</span>
-    stats = process_file(filename)
-    
-    <span class="comment"># Add to totals</span>
-    total["lines"] += stats["lines"]
-    total["words"] += stats["words"]
-    total["bytes"] += stats["bytes"]
-    
-    <span class="comment"># Show individual file stats</span>
-    print(format_output(stats, filename))
+<span class="highlight">def process_file_and_get_stats(filename):</span>
+    <span class="comment">"""Simulates processing a file and returns dummy stats."""</span>
+    if filename == "error.txt":
+        raise FileNotFoundError("Simulated file not found")
+    return {"lines": 10, "words": 50, "bytes": 200}
 
-<span class="comment"># Show totals if multiple files</span>
-if len(args.files) > 1:
-    print(format_output(total, "total"))</pre>
+<span class="highlight">def format_output_simple(data, name):</span>
+    return f"L: {data['lines']}, W: {data['words']}, B: {data['bytes']} - {name}"
+
+<span class="comment"># Initialize accumulator for totals.</span>
+<span class="highlight">total = {"lines": 0, "words": 0, "bytes": 0}</span>
+
+<span class="comment"># Assuming 'args.files' is a list of filenames.</span>
+simulated_files_for_total = ["fileA.txt", "fileB.txt", "error.txt"]
+
+for filename in simulated_files_for_total:
+    <span class="highlight">try:</span>
+        <span class="comment"># Process each file and get its stats.</span>
+        stats = process_file_and_get_stats(filename)
+        
+        <span class="comment"># Add individual file stats to running totals.</span>
+        total["lines"] += stats["lines"]
+        total["words"] += stats["words"]
+        total["bytes"] += stats["bytes"]
+        
+        <span class="comment"># Show individual file stats.</span>
+        print(format_output_simple(stats, filename))
+        
+    <span class="highlight">except Exception as e:</span>
+        print(f"Skipping {filename} due to error: {e}", file=sys.stderr)
+
+<span class="comment"># Show overall totals if multiple files were processed.</span>
+if len(simulated_files_for_total) > 1:
+    print("\\n--- Grand Total ---")
+    print(format_output_simple(total, "TOTAL"))</pre>
               </div>
             </div>
           </div>
@@ -480,14 +761,14 @@ if len(args.files) > 1:
         <div class="quiz-section">
           <div class="quiz-question">
             🤔 Quick Quiz: What pattern would you use for a tool that counts
-            files in directories?
+            files and subdirectories within a given path, showing a final sum?
           </div>
           <div class="quiz-options">
             <button class="quiz-option" onclick="selectQuizOption(this, false)">
               File Processing Pattern
             </button>
             <button class="quiz-option" onclick="selectQuizOption(this, true)">
-              Directory Processing + Accumulator Pattern
+              Directory Traversal + Accumulator Pattern
             </button>
             <button class="quiz-option" onclick="selectQuizOption(this, false)">
               Conditional Output Pattern
@@ -498,11 +779,12 @@ if len(args.files) > 1:
 
       <!-- Lesson 5: JS vs Python Comparison -->
       <div class="lesson-content" id="lesson-compare">
-        <h2 class="lesson-title">⚡ JavaScript vs Python</h2>
+        <h2 class="lesson-title">⚡ JavaScript vs Python for CLI</h2>
 
         <p style="font-size: 1.1rem; margin-bottom: 25px">
-          Let's see how our JavaScript CLI tools translate to Python - side by
-          side!
+          Both JavaScript (via Node.js) and Python are excellent choices for
+          building CLI tools. Let's compare how common tasks are handled in each
+          language, highlighting their similarities and differences.
         </p>
 
         <div class="comparison-table">
@@ -517,21 +799,32 @@ if len(args.files) > 1:
             </thead>
             <tbody>
               <tr>
-                <td><code>import { program } from "commander";</code></td>
+                <td>
+                  <code>import &#123; program &#125; from "commander";</code>
+                </td>
                 <td><code>import argparse</code></td>
-                <td>CLI argument parsing</td>
+                <td>Both are popular libraries for CLI argument parsing.</td>
               </tr>
               <tr>
                 <td>
-                  <code>import { readFile } from "node:fs/promises";</code>
+                  <code
+                    >import &#123; readFile &#125; from
+                    "node:fs/promises";</code
+                  >
                 </td>
                 <td><code>open(file, "r")</code></td>
-                <td>File reading</td>
+                <td>
+                  Standard ways to read files. Node.js often uses promises for
+                  async I/O.
+                </td>
               </tr>
               <tr>
                 <td><code>#!/usr/bin/env node</code></td>
                 <td><code>#!/usr/bin/env python3</code></td>
-                <td>Shebang for executable</td>
+                <td>
+                  The "shebang" line makes the script directly executable on
+                  Unix-like systems.
+                </td>
               </tr>
             </tbody>
           </table>
@@ -549,20 +842,20 @@ if len(args.files) > 1:
             <tbody>
               <tr>
                 <td>
-                  <pre><code>program
+                  <pre><code class="language-js">program
   .name("cat")
   .description("Print files")
   .option("-n", "Number lines")
-  .argument("&lt;files...&gt;", "Files")
+  .argument("&lt;files...&gt;", "Files") // &lt;files...&gt; for one or more positional args
   .parse();</code></pre>
                 </td>
                 <td>
-                  <pre><code>parser = argparse.ArgumentParser(
+                  <pre><code class="language-python">parser = argparse.ArgumentParser(
     prog="cat",
     description="Print files"
 )
 parser.add_argument("-n", action="store_true")
-parser.add_argument("files", nargs="+")
+parser.add_argument("files", nargs="+") # nargs="+" for one or more positional args
 args = parser.parse_args()</code></pre>
                 </td>
               </tr>
@@ -591,17 +884,26 @@ args = parser.parse_args()</code></pre>
                     = f.read()</code
                   >
                 </td>
-                <td>Python uses context managers</td>
+                <td>
+                  Python's `with` statement ensures automatic file closing.
+                  Node.js often uses async/await.
+                </td>
               </tr>
               <tr>
                 <td><code>const files = await readdir(dir);</code></td>
                 <td><code>files = os.listdir(dir)</code></td>
-                <td>Python is synchronous by default</td>
+                <td>
+                  Node.js `fs/promises` are asynchronous by default; Python
+                  `os.listdir` is synchronous.
+                </td>
               </tr>
               <tr>
                 <td><code>Buffer.byteLength(text, "utf8")</code></td>
                 <td><code>len(text.encode("utf-8"))</code></td>
-                <td>Different byte counting methods</td>
+                <td>
+                  Different built-in methods for calculating byte length of a
+                  string.
+                </td>
               </tr>
             </tbody>
           </table>
@@ -619,24 +921,37 @@ args = parser.parse_args()</code></pre>
             </thead>
             <tbody>
               <tr>
-                <td><code>text.split("\n")</code></td>
-                <td><code>text.split("\n")</code></td>
-                <td>Split by newlines (same!)</td>
+                <td><code>text.split("\\n")</code></td>
+                <td><code>text.split("\\n")</code></td>
+                <td>
+                  Splits a string into an array/list of substrings based on the
+                  newline character.
+                </td>
               </tr>
               <tr>
                 <td><code>text.trim().split(/\s+/).filter(Boolean)</code></td>
                 <td><code>text.strip().split()</code></td>
-                <td>Split into words</td>
+                <td>
+                  Removes leading/trailing whitespace and splits a string into
+                  words. Python's `split()` without arguments handles multiple
+                  spaces.
+                </td>
               </tr>
               <tr>
                 <td><code>num.toString().padStart(6)</code></td>
                 <td><code>str(num).rjust(6)</code></td>
-                <td>Right-align numbers</td>
+                <td>
+                  Pads a string with leading characters (usually spaces) to
+                  reach a specified total length, right-aligning the content.
+                </td>
               </tr>
               <tr>
                 <td><code>array.join(" ")</code></td>
                 <td><code>" ".join(list)</code></td>
-                <td>Join with spaces</td>
+                <td>
+                  Joins elements of an array/list into a single string using a
+                  specified separator.
+                </td>
               </tr>
             </tbody>
           </table>
@@ -644,6 +959,10 @@ args = parser.parse_args()</code></pre>
 
         <div class="interactive-example">
           <h3>🎯 Complete Side-by-Side: Cat Command</h3>
+          <p>
+            A full comparison of a basic `cat` command implementation in both
+            JavaScript (Node.js) and Python.
+          </p>
           <div style="display: grid; grid-template-columns: 1fr; gap: 20px">
             <div>
               <h4 style="color: #ffd89b; margin-bottom: 10px">
@@ -651,34 +970,42 @@ args = parser.parse_args()</code></pre>
               </h4>
               <div class="code-container">
                 <div class="code-content">
-                  <pre><code>import { program } from "commander";
-import { readFile } from "node:fs/promises";
+                  <pre><code class="language-js">import &#123; program &#125; from "commander";
+import &#123; readFile &#125; from "node:fs/promises";
+import process from "node:process";
 
 program
   .name("cat")
-  .option("-n", "Number lines")
-  .argument("&lt;files...&gt;", "Files")
+  .option("-n", "Number all output lines")
+  .argument("&lt;files...&gt;", "Files to read")
   .parse();
 
 const options = program.opts();
 const files = program.args;
 
-for (const file of files) {
-  try {
-    const content = await readFile(file, "utf-8");
-    const lines = content.split("\n");
-    
-    lines.forEach((line, i) => {
-      let prefix = "";
-      if (options.n) {
-        prefix = (i + 1).toString().padStart(6) + "  ";
-      }
-      console.log(prefix + line);
-    });
-  } catch (error) {
-    console.error(`Error: ${error.message}`);
+async function runCat() {
+  for (const file of files) {
+    try {
+      const content = await readFile(file, "utf-8");
+      const lines = content.split("\\n"); // Split into lines
+      
+      lines.forEach((line, i) => {
+        let prefix = "";
+        if (options.n) {
+          // Pad start with spaces to 6 characters, then add two spaces
+          prefix = (i + 1).toString().padStart(6) + "  ";
+        }
+        console.log(prefix + line);
+      });
+    } catch (error) {
+      // Print errors to stderr
+      console.error(`Error: ${file}: ${error.message}`);
+      process.exitCode = 1; // Set exit code for error
+    }
   }
-}</code></pre>
+}
+
+runCat(); // Execute the async function</code></pre>
                 </div>
               </div>
             </div>
@@ -688,29 +1015,45 @@ for (const file of files) {
               </h4>
               <div class="code-container">
                 <div class="code-content">
-                  <pre><code>#!/usr/bin/env python3
+                  <pre><code class="language-python">#!/usr/bin/env python3
 import argparse
 import sys
 
 def main():
-    parser = argparse.ArgumentParser(prog="cat")
-    parser.add_argument("-n", action="store_true")
-    parser.add_argument("files", nargs="+")
+    parser = argparse.ArgumentParser(
+        prog="cat",
+        description="Concatenate files and print to standard output."
+    )
+    parser.add_argument(
+        "-n", "--number-lines",
+        action="store_true",
+        help="Number all output lines."
+    )
+    parser.add_argument(
+        "files",
+        nargs="+", # Requires one or more files
+        help="The files to read and concatenate."
+    )
     args = parser.parse_args()
     
     for file in args.files:
         try:
             with open(file, "r", encoding="utf-8") as f:
                 content = f.read()
-            lines = content.split("\n")
+            lines = content.split("\\n") # Split into lines
             
-            for i, line in enumerate(lines):
+            for i, line in enumerate(lines): # enumerate gives index and value
                 prefix = ""
-                if args.n:
+                if args.number_lines:
+                    # Right-align with 6 spaces, then add two spaces
                     prefix = str(i + 1).rjust(6) + "  "
                 print(prefix + line)
+        except FileNotFoundError:
+            print(f"Error: {file}: No such file or directory", file=sys.stderr)
+            sys.exit(1) # Exit with error code
         except Exception as error:
-            print(f"Error: {error}", file=sys.stderr)
+            print(f"Error: {file}: {error}", file=sys.stderr)
+            sys.exit(1)
 
 if __name__ == "__main__":
     main()</code></pre>
@@ -724,19 +1067,48 @@ if __name__ == "__main__":
           <div class="concept-card">
             <div class="concept-title">🏃‍♂️ JavaScript Strengths</div>
             <div class="concept-description">
-              • Async/await built-in<br />
-              • Compact syntax<br />
-              • Great for I/O heavy tasks<br />
-              • Node.js ecosystem
+              <ul>
+                <li>
+                  <strong>Async/await built-in:</strong> Excellent for I/O-heavy
+                  tasks without complex callbacks.
+                </li>
+                <li>
+                  <strong>Compact syntax:</strong> Often requires less
+                  boilerplate code for simple tasks.
+                </li>
+                <li>
+                  <strong>Node.js ecosystem:</strong> Access to a vast array of
+                  npm packages for various functionalities.
+                </li>
+                <li>
+                  <strong>Full-stack development:</strong> Use JavaScript across
+                  frontend, backend, and CLI.
+                </li>
+              </ul>
             </div>
           </div>
           <div class="concept-card">
             <div class="concept-title">🐍 Python Strengths</div>
             <div class="concept-description">
-              • More readable syntax<br />
-              • Excellent error handling<br />
-              • Rich standard library<br />
-              • Better for text processing
+              <ul>
+                <li>
+                  <strong>More readable syntax:</strong> Often considered easier
+                  to read and write, especially for beginners.
+                </li>
+                <li>
+                  <strong>Rich standard library:</strong> Comes with many
+                  powerful modules for common tasks out-of-the-box.
+                </li>
+                <li>
+                  <strong>Excellent for data processing:</strong> Strong
+                  capabilities for data manipulation, scientific computing, and
+                  machine learning.
+                </li>
+                <li>
+                  <strong>Mature error handling:</strong> Robust exception
+                  handling mechanisms.
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -748,17 +1120,20 @@ if __name__ == "__main__":
 
         <p style="font-size: 1.1rem; margin-bottom: 25px">
           Ready to test your skills? Try building these CLI tools from scratch!
+          Each challenge provides requirements, starter code, and a complete
+          solution for you to compare.
         </p>
 
         <div class="concept-grid">
           <div class="concept-card" onclick="showChallenge('echo')">
             <div class="concept-title">🔊 Challenge 1: Echo Command</div>
             <div class="concept-description">
-              Build a simple echo command that prints arguments to stdout.
+              Build a simple `echo` command that prints its arguments to stdout,
+              with options for newlines and escape sequence interpretation.
               <br /><strong>Difficulty:</strong> Beginner <br /><strong
                 >New Concepts:</strong
               >
-              Basic argparse, string joining
+              Basic `argparse`, string joining, escape sequences.
             </div>
             <button class="try-it-btn">Try This Challenge</button>
           </div>
@@ -766,11 +1141,13 @@ if __name__ == "__main__":
           <div class="concept-card" onclick="showChallenge('head')">
             <div class="concept-title">📄 Challenge 2: Head Command</div>
             <div class="concept-description">
-              Show the first N lines of files (default 10).
+              Create a `head` command that shows the first N lines of files
+              (default 10), similar to the Unix `head` utility.
               <br /><strong>Difficulty:</strong> Intermediate <br /><strong
                 >New Concepts:</strong
               >
-              Default values, list slicing
+              Default values in `argparse`, list slicing, handling multiple
+              files.
             </div>
             <button class="try-it-btn">Try This Challenge</button>
           </div>
@@ -778,11 +1155,14 @@ if __name__ == "__main__":
           <div class="concept-card" onclick="showChallenge('grep')">
             <div class="concept-title">🔍 Challenge 3: Simple Grep</div>
             <div class="concept-description">
-              Search for patterns in files and show matching lines.
+              Implement a simplified `grep` command to search for patterns in
+              files and display matching lines, with options for
+              case-insensitivity and line numbers.
               <br /><strong>Difficulty:</strong> Advanced <br /><strong
                 >New Concepts:</strong
               >
-              String searching, regex
+              String searching, regular expressions (`re` module), conditional
+              output.
             </div>
             <button class="try-it-btn">Try This Challenge</button>
           </div>
@@ -790,11 +1170,14 @@ if __name__ == "__main__":
           <div class="concept-card" onclick="showChallenge('tree')">
             <div class="concept-title">🌳 Challenge 4: Tree Command</div>
             <div class="concept-description">
-              Display directory structure in tree format.
+              Develop a `tree` command to display directory structures in a
+              tree-like format with proper indentation, and options for hidden
+              files or directories only.
               <br /><strong>Difficulty:</strong> Expert <br /><strong
                 >New Concepts:</strong
               >
-              Recursion, directory traversal
+              Recursion, directory traversal (`os` module), intricate
+              formatting.
             </div>
             <button class="try-it-btn">Try This Challenge</button>
           </div>
@@ -806,32 +1189,70 @@ if __name__ == "__main__":
         </div>
 
         <div class="interactive-example">
-          <h3>🎓 Your Learning Path</h3>
+          <h3>🎓 Your Learning Path Summary</h3>
           <div class="step-by-step">
             <div class="step">
               <span class="step-number">✅</span>
               <strong>You've Learned:</strong>
               <ul style="margin-left: 40px; margin-top: 10px">
-                <li>Python CLI basics and structure</li>
-                <li>Argparse for command-line arguments</li>
-                <li>File handling and error management</li>
-                <li>Common CLI patterns and best practices</li>
-                <li>How to convert JavaScript tools to Python</li>
+                <li>
+                  Python CLI basics and script structure (shebang, `main`
+                  function)
+                </li>
+                <li>
+                  How to use `argparse` for robust command-line argument
+                  handling
+                </li>
+                <li>
+                  Effective file handling techniques, including safe reading and
+                  directory operations
+                </li>
+                <li>
+                  Common CLI patterns like file processing, conditional output,
+                  and accumulators
+                </li>
+                <li>
+                  A comparative understanding of building CLIs in JavaScript
+                  (Node.js) vs. Python
+                </li>
               </ul>
             </div>
             <div class="step">
               <span class="step-number">🚀</span>
-              <strong>Next Steps:</strong>
+              <strong>Next Steps to CLI Mastery:</strong>
               <ul style="margin-left: 40px; margin-top: 10px">
-                <li>Complete the practice challenges</li>
-                <li>Build your own custom CLI tool</li>
-                <li>Learn about packaging with setuptools</li>
-                <li>Explore advanced libraries like Click or Typer</li>
-                <li>Add your tools to PATH for system-wide use</li>
+                <li>
+                  Complete all the practice challenges to solidify your skills.
+                </li>
+                <li>
+                  Start building your own custom CLI tool for a personal project
+                  or automation task.
+                </li>
+                <li>
+                  Explore advanced Python CLI libraries like `Click` or `Typer`
+                  for more complex applications.
+                </li>
+                <li>
+                  Learn about packaging your Python CLI tools for easy
+                  distribution using `setuptools` or `Poetry`.
+                </li>
+                <li>
+                  Add your custom tools to your system's PATH for system-wide
+                  use.
+                </li>
               </ul>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Custom Modal HTML -->
+    <div id="customModalOverlay" class="modal-overlay">
+      <div class="modal-content">
+        <h4 id="modalTitle"></h4>
+        <p id="modalMessage"></p>
+        <button class="modal-close-btn" onclick="closeModal()">Got It!</button>
       </div>
     </div>
 

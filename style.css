@@ -5,89 +5,130 @@
 }
 
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Inter", sans-serif; /* Using Inter font */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #ffffff;
   line-height: 1.6;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 20px auto; /* Add margin to top/bottom */
+  padding: 0; /* Remove padding from container itself, sections will have it */
+  min-height: 80vh;
+  background: rgba(0, 0, 0, 0.2); /* Slightly darker, more transparent */
+  backdrop-filter: blur(15px); /* Stronger blur */
+  border-radius: 15px; /* More rounded corners */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+  overflow: hidden; /* Ensures rounded corners apply to children */
+  display: flex;
+  flex-direction: column;
 }
 
+/* Header */
 .header {
   text-align: center;
-  padding: 40px 0;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
-  margin-bottom: 30px;
+  padding: 2.5rem 2rem; /* More padding */
+  background: rgba(0, 0, 0, 0.3); /* Darker header background */
+  border-bottom: 3px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+  position: relative; /* For progress bar positioning */
 }
 
 .header h1 {
-  font-size: 3rem;
-  margin-bottom: 10px;
-  background: linear-gradient(45deg, #ffd89b, #19547b);
+  font-size: 3rem; /* Larger font size */
+  margin-bottom: 0.75rem;
+  background: linear-gradient(
+    45deg,
+    #ffd89b,
+    #f093fb
+  ); /* More vibrant gradient */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-weight: 700;
 }
 
 .header p {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   opacity: 0.9;
 }
 
+/* Progress Bar */
+.progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 8px; /* Taller */
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0; /* Straight edges for bottom */
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  height: 100%;
+  width: 0%;
+  transition: width 0.6s ease-out; /* Smoother transition */
+}
+
+/* Lesson Navigation */
 .lesson-nav {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-bottom: 30px;
+  gap: 10px; /* Slightly less gap */
+  padding: 15px 20px; /* Add padding to nav container */
+  background: rgba(0, 0, 0, 0.2); /* Darker nav background */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   flex-wrap: wrap;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .lesson-btn {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border: none;
-  padding: 12px 25px;
-  border-radius: 25px;
+  padding: 10px 20px; /* Slightly less padding */
+  border-radius: 20px; /* Slightly less rounded */
   cursor: pointer;
-  transition: all 0.3s;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px); /* Lighter blur for buttons */
+  border: 1px solid rgba(255, 255, 255, 0.15); /* Lighter border */
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .lesson-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.25); /* More pronounced hover */
+  transform: translateY(-3px); /* More pronounced lift */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .lesson-btn.active {
   background: linear-gradient(45deg, #667eea, #764ba2);
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transform: translateY(-1px); /* Keep slightly lifted */
 }
 
+/* Lesson Content Sections */
 .lesson-content {
   display: none;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 40px; /* More padding */
+  flex-grow: 1; /* Allow content to fill space */
 }
 
 .lesson-content.active {
   display: block;
-  animation: fadeIn 0.5s ease-in;
+  animation: fadeIn 0.6s ease-out; /* Slower and smoother fade */
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
@@ -97,61 +138,75 @@ body {
 
 .lesson-title {
   font-size: 2.5rem;
-  margin-bottom: 20px;
+  margin-bottom: 25px; /* More space */
   color: #ffd89b;
+  font-weight: 700;
+  border-bottom: 2px solid rgba(255, 216, 155, 0.3); /* Subtle underline */
+  padding-bottom: 10px;
 }
 
+/* Concept Grid */
 .concept-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  /* Slightly wider min-width */
   gap: 25px;
   margin: 30px 0;
 }
 
+/* Concept Card */
 .concept-card {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08); /* Lighter background */
   border-radius: 15px;
-  padding: 25px;
+  padding: 30px; /* More padding */
   border-left: 5px solid #ffd89b;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
   cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
 }
 
 .concept-card:hover {
   background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-3px);
+  transform: translateY(-5px); /* More pronounced lift */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .concept-title {
-  font-size: 1.4rem;
+  font-size: 1.5rem; /* Larger title */
   margin-bottom: 10px;
   color: #ffd89b;
+  font-weight: 600;
 }
 
 .concept-description {
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 15px;
+  font-size: 1rem;
 }
 
+/* Code Container */
 .code-container {
   background: #1a1a1a;
   border-radius: 10px;
   margin: 20px 0;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Added shadow */
 }
 
 .code-header {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.15); /* Slightly lighter header */
+  padding: 12px 20px; /* Adjusted padding */
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .code-title {
   color: #ffd89b;
   font-weight: bold;
+  font-size: 0.95rem;
 }
 
 .copy-btn {
@@ -161,19 +216,26 @@ body {
   padding: 8px 15px;
   border-radius: 5px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .copy-btn:hover {
   background: #5a67d8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .code-content {
   padding: 20px;
-  font-family: "Monaco", "Consolas", monospace;
+  font-family: "Fira Code", "Monaco", "Consolas", monospace; /* Fira Code for better ligatures */
   font-size: 14px;
   line-height: 1.6;
   overflow-x: auto;
+  white-space: pre-wrap; /* Ensure wrapping */
+  max-height: 400px; /* Limit height for long code blocks */
+  overflow-y: auto; /* Enable vertical scroll for long code */
 }
 
 .code-content pre {
@@ -194,6 +256,7 @@ body {
   font-style: italic;
 }
 
+/* Step-by-Step */
 .step-by-step {
   margin: 30px 0;
 }
@@ -201,30 +264,35 @@ body {
 .step {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
-  padding: 20px;
+  padding: 25px; /* More padding */
   margin: 15px 0;
   border-left: 4px solid #667eea;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .step-number {
   background: #667eea;
   color: white;
-  width: 30px;
-  height: 30px;
+  width: 35px; /* Larger */
+  height: 35px; /* Larger */
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin-right: 15px;
   font-weight: bold;
+  font-size: 1.1rem;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
+/* Comparison Table */
 .comparison-table {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   padding: 20px;
-  margin: 20px 0;
+  margin: 25px 0; /* More margin */
   overflow-x: auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .comparison-table table {
@@ -236,77 +304,82 @@ body {
 .comparison-table td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Lighter border */
+  vertical-align: top; /* Align content to top */
 }
 
 .comparison-table th {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08); /* Lighter header background */
   color: #ffd89b;
   font-weight: bold;
 }
 
+.comparison-table td code {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 3px 6px;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+
+/* Interactive Example */
 .interactive-example {
   background: linear-gradient(
     135deg,
-    rgba(102, 126, 234, 0.3),
-    rgba(118, 75, 162, 0.3)
-  );
+    rgba(102, 126, 234, 0.2),
+    rgba(118, 75, 162, 0.2)
+  ); /* Lighter gradient */
   border-radius: 15px;
-  padding: 25px;
-  margin: 25px 0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 30px; /* More padding */
+  margin: 30px 0; /* More margin */
+  border: 1px solid rgba(255, 255, 255, 0.15); /* Lighter border */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .try-it-btn {
   background: linear-gradient(45deg, #ffd89b, #f093fb);
   color: #1a1a1a;
   border: none;
-  padding: 12px 25px;
-  border-radius: 25px;
+  padding: 14px 30px; /* Larger padding */
+  border-radius: 30px; /* More rounded */
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.3s;
-  margin: 10px 0;
+  transition: all 0.3s ease;
+  margin: 15px 0 0; /* Adjusted margin */
+  font-size: 1.1rem;
+  box-shadow: 0 5px 15px rgba(255, 216, 155, 0.3);
 }
 
 .try-it-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(255, 216, 155, 0.4);
+  transform: scale(1.06); /* More pronounced scale */
+  box-shadow: 0 8px 20px rgba(255, 216, 155, 0.5);
 }
 
+/* Terminal Demo */
 .terminal-demo {
   background: #000;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 20px 0;
-  font-family: "Monaco", "Consolas", monospace;
+  border-radius: 10px;
+  padding: 25px; /* More padding */
+  margin: 25px 0;
+  font-family: "Fira Code", "Monaco", "Consolas", monospace;
   border: 1px solid #333;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .terminal-header {
   display: flex;
   gap: 8px;
-  margin-bottom: 15px;
+  margin-bottom: 20px; /* More space */
 }
 
 .terminal-dot {
-  width: 12px;
-  height: 12px;
+  width: 14px; /* Larger dots */
+  height: 14px;
   border-radius: 50%;
-}
-
-.dot-red {
-  background: #ff5f56;
-}
-.dot-yellow {
-  background: #ffbd2e;
-}
-.dot-green {
-  background: #27ca3f;
 }
 
 .prompt {
   color: #00ff00;
+  font-weight: bold;
 }
 
 .command {
@@ -315,78 +388,266 @@ body {
 
 .output {
   color: #ffffff;
-  margin: 5px 0;
+  margin: 8px 0; /* More vertical space */
 }
 
-.progress-bar {
-  background: rgba(255, 255, 255, 0.2);
-  height: 6px;
-  border-radius: 3px;
-  margin: 20px 0;
-  overflow: hidden;
-}
-
-.progress-fill {
-  background: linear-gradient(90deg, #667eea, #764ba2);
-  height: 100%;
-  width: 0%;
-  transition: width 0.5s ease;
-}
-
+/* Quiz Section */
 .quiz-section {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
-  padding: 25px;
-  margin: 25px 0;
+  padding: 30px; /* More padding */
+  margin: 30px 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .quiz-question {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
+  font-size: 1.3rem; /* Larger question */
+  margin-bottom: 20px;
   color: #ffd89b;
+  font-weight: 600;
 }
 
 .quiz-options {
   display: grid;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 12px; /* More gap */
+  margin-bottom: 20px;
 }
 
 .quiz-option {
   background: rgba(255, 255, 255, 0.1);
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Added border */
+  padding: 15px; /* More padding */
+  border-radius: 10px; /* More rounded */
   color: white;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
   text-align: left;
+  font-size: 1rem;
 }
 
 .quiz-option:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
 }
 
 .quiz-option.correct {
-  background: rgba(72, 187, 120, 0.3);
+  background: rgba(72, 187, 120, 0.4); /* Darker green */
   border: 1px solid #48bb78;
 }
 
 .quiz-option.wrong {
-  background: rgba(245, 101, 101, 0.3);
+  background: rgba(245, 101, 101, 0.4); /* Darker red */
   border: 1px solid #f56565;
 }
 
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  max-width: 400px;
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-overlay.active .modal-content {
+  transform: translateY(0);
+}
+
+.modal-content h4 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #ffd89b;
+}
+
+.modal-content p {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+}
+
+.modal-close-btn {
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-close-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Footer */
+.footer {
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.9rem;
+  border-top: 3px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto; /* Pushes footer to the bottom */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .container {
+    margin: 10px auto;
+  }
+  .lesson-content {
+    padding: 30px;
+  }
+  .lesson-title {
+    font-size: 2.2rem;
+  }
+  .concept-title {
+    font-size: 1.4rem;
+  }
+  .concept-description {
+    font-size: 0.95rem;
+  }
+}
+
 @media (max-width: 768px) {
+  body {
+    font-size: 0.95rem;
+  }
+  .container {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .header {
+    padding: 2rem 1rem;
+  }
   .header h1 {
     font-size: 2rem;
   }
-
-  .concept-grid {
-    grid-template-columns: 1fr;
+  .header p {
+    font-size: 1rem;
   }
-
+  .lesson-nav {
+    padding: 10px 10px;
+    gap: 5px;
+    justify-content: flex-start; /* Align buttons to start on small screens */
+  }
+  .lesson-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    min-width: unset;
+    flex-grow: 1; /* Allow buttons to grow and fill space */
+  }
   .lesson-content {
     padding: 20px;
+  }
+  .lesson-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  .concept-grid {
+    grid-template-columns: 1fr; /* Stack cards vertically */
+    gap: 20px;
+  }
+  .concept-card {
+    padding: 25px;
+  }
+  .code-content {
+    font-size: 13px;
+    padding: 15px;
+  }
+  .interactive-example {
+    padding: 20px;
+  }
+  .interactive-example > div {
+    grid-template-columns: 1fr !important; /* Force single column for side-by-side code */
+    gap: 15px; /* Reduce gap */
+  }
+  .comparison-table {
+    padding: 15px;
+  }
+  .comparison-table th,
+  .comparison-table td {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+  .terminal-demo {
+    padding: 15px;
+  }
+  .quiz-section {
+    padding: 20px;
+  }
+  .quiz-question {
+    font-size: 1.1rem;
+  }
+  .quiz-option {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  .modal-content {
+    max-width: 90%;
+    padding: 20px;
+  }
+  .modal-content h4 {
+    font-size: 1.5rem;
+  }
+  .modal-content p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.8rem;
+  }
+  .lesson-btn {
+    font-size: 0.75rem;
+    padding: 6px 8px;
+  }
+  .lesson-title {
+    font-size: 1.5rem;
+  }
+  .concept-title {
+    font-size: 1.2rem;
+  }
+  .concept-description {
+    font-size: 0.85rem;
+  }
+  .try-it-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+  .code-content {
+    font-size: 12px;
+    padding: 10px;
   }
 }
