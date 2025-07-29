@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learn Python CLI Scripting</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #ffffff;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        padding: 40px 0;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        background: linear-gradient(45deg, #ffd89b, #19547b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .lesson-nav {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
+
+      .lesson-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .lesson-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .lesson-btn.active {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .lesson-content {
+        display: none;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .lesson-content.active {
+        display: block;
+        animation: fadeIn 0.5s ease-in;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .lesson-title {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: #ffd89b;
+      }
+
+      .concept-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 25px;
+        margin: 30px 0;
+      }
+
+      .concept-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        border-left: 5px solid #ffd89b;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+
+      .concept-card:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-3px);
+      }
+
+      .concept-title {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+        color: #ffd89b;
+      }
+
+      .concept-description {
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 15px;
+      }
+
+      .code-container {
+        background: #1a1a1a;
+        border-radius: 10px;
+        margin: 20px 0;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .code-header {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .code-title {
+        color: #ffd89b;
+        font-weight: bold;
+      }
+
+      .copy-btn {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .copy-btn:hover {
+        background: #5a67d8;
+      }
+
+      .code-content {
+        padding: 20px;
+        font-family: "Monaco", "Consolas", monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        overflow-x: auto;
+      }
+
+      .code-content pre {
+        color: #e2e8f0;
+        margin: 0;
+      }
+
+      .highlight {
+        background: #ffd89b;
+        color: #1a1a1a;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+
+      .comment {
+        color: #68d391;
+        font-style: italic;
+      }
+
+      .step-by-step {
+        margin: 30px 0;
+      }
+
+      .step {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 20px;
+        margin: 15px 0;
+        border-left: 4px solid #667eea;
+      }
+
+      .step-number {
+        background: #667eea;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-weight: bold;
+      }
+
+      .comparison-table {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        overflow-x: auto;
+      }
+
+      .comparison-table table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .comparison-table th {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffd89b;
+        font-weight: bold;
+      }
+
+      .interactive-example {
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.3),
+          rgba(118, 75, 162, 0.3)
+        );
+        border-radius: 15px;
+        padding: 25px;
+        margin: 25px 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .try-it-btn {
+        background: linear-gradient(45deg, #ffd89b, #f093fb);
+        color: #1a1a1a;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s;
+        margin: 10px 0;
+      }
+
+      .try-it-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(255, 216, 155, 0.4);
+      }
+
+      .terminal-demo {
+        background: #000;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        font-family: "Monaco", "Consolas", monospace;
+        border: 1px solid #333;
+      }
+
+      .terminal-header {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      .terminal-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      .dot-red {
+        background: #ff5f56;
+      }
+      .dot-yellow {
+        background: #ffbd2e;
+      }
+      .dot-green {
+        background: #27ca3f;
+      }
+
+      .prompt {
+        color: #00ff00;
+      }
+
+      .command {
+        color: #87ceeb;
+      }
+
+      .output {
+        color: #ffffff;
+        margin: 5px 0;
+      }
+
+      .progress-bar {
+        background: rgba(255, 255, 255, 0.2);
+        height: 6px;
+        border-radius: 3px;
+        margin: 20px 0;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        height: 100%;
+        width: 0%;
+        transition: width 0.5s ease;
+      }
+
+      .quiz-section {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 25px 0;
+      }
+
+      .quiz-question {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        color: #ffd89b;
+      }
+
+      .quiz-options {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .quiz-option {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: left;
+      }
+
+      .quiz-option:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .quiz-option.correct {
+        background: rgba(72, 187, 120, 0.3);
+        border: 1px solid #48bb78;
+      }
+
+      .quiz-option.wrong {
+        background: rgba(245, 101, 101, 0.3);
+        border: 1px solid #f56565;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .concept-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .lesson-content {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🐍 Python CLI Mastery</h1>
+        <p>Learn to build command-line tools like cat, ls, and wc</p>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+      </div>
+
+      <div class="lesson-nav">
+        <button class="lesson-btn active" onclick="showLesson('basics')">
+          1. Basics
+        </button>
+        <button class="lesson-btn" onclick="showLesson('argparse')">
+          2. Argparse
+        </button>
+        <button class="lesson-btn" onclick="showLesson('files')">
+          3. File Handling
+        </button>
+        <button class="lesson-btn" onclick="showLesson('patterns')">
+          4. Common Patterns
+        </button>
+        <button class="lesson-btn" onclick="showLesson('compare')">
+          5. JS vs Python
+        </button>
+        <button class="lesson-btn" onclick="showLesson('practice')">
+          6. Practice
+        </button>
+      </div>
+
+      <!-- Lesson 1: Python Basics -->
+      <div class="lesson-content active" id="lesson-basics">
+        <h2 class="lesson-title">🚀 Python CLI Basics</h2>
+
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="concept-title">Shebang Line</div>
+            <div class="concept-description">
+              Makes your Python file executable on Unix systems
+            </div>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="comment"># At the very top of your file</span>
+<span class="highlight">#!/usr/bin/env python3</span>
+
+<span class="comment"># Now you can run: ./script.py instead of python3 script.py</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="concept-card">
+            <div class="concept-title">Essential Imports</div>
+            <div class="concept-description">
+              Libraries you'll use in every CLI script
+            </div>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="highlight">import argparse</span>  <span class="comment"># For command-line arguments</span>
+<span class="highlight">import sys</span>       <span class="comment"># For system functions (like stderr)</span>
+<span class="highlight">import os</span>        <span class="comment"># For file/directory operations</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="concept-card">
+            <div class="concept-title">Main Function Pattern</div>
+            <div class="concept-description">
+              The standard way to structure Python scripts
+            </div>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="highlight">def main():</span>
+    <span class="comment"># Your main code goes here</span>
+    print("Hello, CLI world!")
+
+<span class="highlight">if __name__ == "__main__":</span>
+    main()
+
+<span class="comment"># This means: "If this file is run directly, call main()"</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="concept-card">
+            <div class="concept-title">Error Handling</div>
+            <div class="concept-description">
+              How to handle errors gracefully in CLI tools
+            </div>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="highlight">try:</span>
+    <span class="comment"># Attempt something risky</span>
+    with open("file.txt", "r") as f:
+        content = f.read()
+<span class="highlight">except FileNotFoundError:</span>
+    print("Error: File not found", <span class="highlight">file=sys.stderr</span>)
+<span class="highlight">except Exception as error:</span>
+    print(f"Error: {error}", <span class="highlight">file=sys.stderr</span>)</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="terminal-demo">
+          <div class="terminal-header">
+            <div class="terminal-dot dot-red"></div>
+            <div class="terminal-dot dot-yellow"></div>
+            <div class="terminal-dot dot-green"></div>
+          </div>
+          <div>
+            <span class="prompt">$ </span
+            ><span class="command">chmod +x hello.py</span>
+          </div>
+          <div>
+            <span class="prompt">$ </span
+            ><span class="command">./hello.py</span>
+          </div>
+          <div class="output">Hello, CLI world!</div>
+        </div>
+      </div>
+
+      <!-- Lesson 2: Argparse -->
+      <div class="lesson-content" id="lesson-argparse">
+        <h2 class="lesson-title">⚙️ Mastering Argparse</h2>
+
+        <p style="font-size: 1.1rem; margin-bottom: 25px">
+          Argparse is Python's built-in library for handling command-line
+          arguments. Think of it as Python's version of Commander.js!
+        </p>
+
+        <div class="step-by-step">
+          <div class="step">
+            <span class="step-number">1</span>
+            <strong>Create the Parser</strong>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="highlight">parser = argparse.ArgumentParser(</span>
+    <span class="highlight">prog="mycommand",</span>           <span class="comment"># Name of your command</span>
+    <span class="highlight">description="What it does"</span>   <span class="comment"># Shows in --help</span>
+<span class="highlight">)</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <span class="step-number">2</span>
+            <strong>Add Flags (Optional Arguments)</strong>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="comment"># Boolean flag (True/False)</span>
+parser.add_argument(<span class="highlight">"-v", "--verbose"</span>, action="store_true", help="Verbose output")
+
+<span class="comment"># Flag that takes a value</span>
+parser.add_argument(<span class="highlight">"-n", "--number"</span>, type=int, help="A number")
+
+<span class="comment"># Flag with default value</span>
+parser.add_argument(<span class="highlight">"-f", "--format"</span>, default="json", help="Output format")</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <span class="step-number">3</span>
+            <strong>Add Arguments (Required/Positional)</strong>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="comment"># Required argument</span>
+parser.add_argument(<span class="highlight">"filename"</span>, help="File to process")
+
+<span class="comment"># Optional argument with default</span>
+parser.add_argument(<span class="highlight">"output"</span>, nargs="?", default="output.txt", help="Output file")
+
+<span class="comment"># Multiple files</span>
+parser.add_argument(<span class="highlight">"files"</span>, nargs="+", help="One or more files")</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <span class="step-number">4</span>
+            <strong>Parse and Use</strong>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="highlight">args = parser.parse_args()</span>
+
+<span class="comment"># Now use the arguments</span>
+if args.verbose:
+    print("Verbose mode enabled!")
+
+print(f"Processing {args.filename}")
+for file in args.files:
+    print(f"File: {file}")</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="interactive-example">
+          <h3>🎯 Real Example: Our Cat Command</h3>
+          <div class="code-container">
+            <div class="code-header">
+              <div class="code-title">Complete Cat Command Argparse Setup</div>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <div class="code-content">
+              <pre>parser = argparse.ArgumentParser(
+    prog="cat",
+    description="Print file contents"
+)
+
+<span class="comment"># Flags for line numbering</span>
+parser.add_argument("-n", action="store_true", help="Number all lines")
+parser.add_argument("-b", action="store_true", help="Number non-blank lines only")
+
+<span class="comment"># Files to read (at least one required)</span>
+parser.add_argument("files", nargs="+", help="Files to read")
+
+<span class="comment"># Parse command line</span>
+args = parser.parse_args()
+
+<span class="comment"># Use the arguments</span>
+for file in args.files:
+    <span class="comment"># Process each file...</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lesson 3: File Handling -->
+      <div class="lesson-content" id="lesson-files">
+        <h2 class="lesson-title">📁 File Handling Like a Pro</h2>
+
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="concept-title">Reading Files</div>
+            <div class="concept-description">
+              The Python way to read files safely
+            </div>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="comment"># The RIGHT way (automatic cleanup)</span>
+<span class="highlight">with open("file.txt", "r", encoding="utf-8") as f:</span>
+    content = f.read()
+    lines = content.split("\n")
+
+<span class="comment"># File automatically closes when done!</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="concept-card">
+            <div class="concept-title">Directory Operations</div>
+            <div class="concept-description">
+              Working with directories and file listings
+            </div>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="highlight">import os</span>
+
+<span class="comment"># List directory contents</span>
+files = <span class="highlight">os.listdir(".")</span>  <span class="comment"># Current directory</span>
+files = <span class="highlight">os.listdir("/home")</span>  <span class="comment"># Specific path</span>
+
+<span class="comment"># Check if path exists</span>
+if <span class="highlight">os.path.exists("file.txt")</span>:
+    print("File exists!")</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="concept-card">
+            <div class="concept-title">String Operations</div>
+            <div class="concept-description">
+              Common text processing you'll need
+            </div>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="comment"># Split text into lines</span>
+lines = text.<span class="highlight">split("\n")</span>
+
+<span class="comment"># Split into words (removes extra spaces)</span>
+words = text.<span class="highlight">strip().split()</span>
+
+<span class="comment"># Right-align numbers (like padStart in JS)</span>
+number_str = str(42).<span class="highlight">rjust(6)</span>  <span class="comment"># "    42"</span>
+
+<span class="comment"># Count bytes in UTF-8</span>
+byte_count = len(text.<span class="highlight">encode("utf-8")</span>)</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="concept-card">
+            <div class="concept-title">Error Handling</div>
+            <div class="concept-description">
+              Handle common file errors gracefully
+            </div>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="highlight">try:</span>
+    with open(filename, "r") as f:
+        content = f.read()
+<span class="highlight">except FileNotFoundError:</span>
+    print(f"{filename}: No such file")
+<span class="highlight">except PermissionError:</span>
+    print(f"{filename}: Permission denied")
+<span class="highlight">except Exception as e:</span>
+    print(f"{filename}: {e}")</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="interactive-example">
+          <h3>🔍 Real Example: Our WC Command File Processing</h3>
+          <div class="code-container">
+            <div class="code-header">
+              <div class="code-title">WC Command File Processing</div>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <div class="code-content">
+              <pre>def count_stats(text):
+    <span class="comment"># Count lines (split creates list, subtract 1)</span>
+    lines = len(text.split("\n")) - 1
+    
+    <span class="comment"># Count words (split() handles multiple spaces)</span>
+    words = len(text.strip().split())
+    
+    <span class="comment"># Count bytes in UTF-8 encoding</span>
+    bytes_count = len(text.encode("utf-8"))
+    
+    return {"lines": lines, "words": words, "bytes": bytes_count}
+
+<span class="comment"># Usage in main loop</span>
+for filename in args.files:
+    try:
+        with open(filename, "r", encoding="utf-8") as f:
+            text = f.read()
+        
+        stats = count_stats(text)
+        print(f"{stats['lines']:7} {stats['words']:7} {stats['bytes']:7} {filename}")
+        
+    except FileNotFoundError:
+        print(f"wc: {filename}: No such file or directory", file=sys.stderr)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lesson 4: Common Patterns -->
+      <div class="lesson-content" id="lesson-patterns">
+        <h2 class="lesson-title">🎨 Common CLI Patterns</h2>
+
+        <p style="font-size: 1.1rem; margin-bottom: 25px">
+          Every CLI tool follows similar patterns. Master these and you can
+          build any command-line tool!
+        </p>
+
+        <div class="step-by-step">
+          <div class="step">
+            <span class="step-number">1</span>
+            <strong>The Universal CLI Structure</strong>
+            <div class="code-container">
+              <div class="code-content">
+                <pre>#!/usr/bin/env python3
+import argparse
+import sys
+
+def main():
+    <span class="comment"># 1. Parse arguments</span>
+    parser = argparse.ArgumentParser(...)
+    args = parser.parse_args()
+    
+    <span class="comment"># 2. Process each input</span>
+    for item in args.inputs:
+        try:
+            <span class="comment"># 3. Do the work</span>
+            result = process_item(item)
+            <span class="comment"># 4. Output result</span>
+            print(result)
+        except Exception as e:
+            <span class="comment"># 5. Handle errors</span>
+            print(f"Error: {e}", file=sys.stderr)
+
+if __name__ == "__main__":
+    main()</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <span class="step-number">2</span>
+            <strong>File Processing Pattern</strong>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="comment"># Pattern: Read → Process → Output</span>
+for filename in args.files:
+    try:
+        <span class="comment"># READ</span>
+        with open(filename, "r", encoding="utf-8") as f:
+            content = f.read()
+        
+        <span class="comment"># PROCESS</span>
+        lines = content.split("\n")
+        processed_lines = [process_line(line) for line in lines]
+        
+        <span class="comment"># OUTPUT</span>
+        for line in processed_lines:
+            print(line)
+            
+    except FileNotFoundError:
+        print(f"Error: {filename} not found", file=sys.stderr)</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <span class="step-number">3</span>
+            <strong>Conditional Output Pattern</strong>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="comment"># Pattern: Different output based on flags</span>
+def format_output(data, args):
+    output = ""
+    
+    <span class="comment"># Show all if no specific flags</span>
+    show_all = not (args.lines or args.words or args.bytes)
+    
+    if args.lines or show_all:
+        output += f"{data['lines']:7}"
+    if args.words or show_all:
+        output += f"{data['words']:7}"
+    if args.bytes or show_all:
+        output += f"{data['bytes']:7}"
+    
+    return output + f" {filename}"</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <span class="step-number">4</span>
+            <strong>Accumulator Pattern (Totals)</strong>
+            <div class="code-container">
+              <div class="code-content">
+                <pre><span class="comment"># Pattern: Keep running totals</span>
+total = {"lines": 0, "words": 0, "bytes": 0}
+
+for filename in args.files:
+    <span class="comment"># Process file and get stats</span>
+    stats = process_file(filename)
+    
+    <span class="comment"># Add to totals</span>
+    total["lines"] += stats["lines"]
+    total["words"] += stats["words"]
+    total["bytes"] += stats["bytes"]
+    
+    <span class="comment"># Show individual file stats</span>
+    print(format_output(stats, filename))
+
+<span class="comment"># Show totals if multiple files</span>
+if len(args.files) > 1:
+    print(format_output(total, "total"))</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quiz-section">
+          <div class="quiz-question">
+            🤔 Quick Quiz: What pattern would you use for a tool that counts
+            files in directories?
+          </div>
+          <div class="quiz-options">
+            <button class="quiz-option" onclick="selectQuizOption(this, false)">
+              File Processing Pattern
+            </button>
+            <button class="quiz-option" onclick="selectQuizOption(this, true)">
+              Directory Processing + Accumulator Pattern
+            </button>
+            <button class="quiz-option" onclick="selectQuizOption(this, false)">
+              Conditional Output Pattern
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lesson 5: JS vs Python Comparison -->
+      <div class="lesson-content" id="lesson-compare">
+        <h2 class="lesson-title">⚡ JavaScript vs Python</h2>
+
+        <p style="font-size: 1.1rem; margin-bottom: 25px">
+          Let's see how our JavaScript CLI tools translate to Python - side by
+          side!
+        </p>
+
+        <div class="comparison-table">
+          <h3 style="margin-bottom: 15px">🔧 Setup & Imports</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>JavaScript (Node.js)</th>
+                <th>Python</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>import { program } from "commander";</code></td>
+                <td><code>import argparse</code></td>
+                <td>CLI argument parsing</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>import { readFile } from "node:fs/promises";</code>
+                </td>
+                <td><code>open(file, "r")</code></td>
+                <td>File reading</td>
+              </tr>
+              <tr>
+                <td><code>#!/usr/bin/env node</code></td>
+                <td><code>#!/usr/bin/env python3</code></td>
+                <td>Shebang for executable</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="comparison-table">
+          <h3 style="margin-bottom: 15px">⚙️ Argument Parsing</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>JavaScript (Commander.js)</th>
+                <th>Python (argparse)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <pre><code>program
+  .name("cat")
+  .description("Print files")
+  .option("-n", "Number lines")
+  .argument("&lt;files...&gt;", "Files")
+  .parse();</code></pre>
+                </td>
+                <td>
+                  <pre><code>parser = argparse.ArgumentParser(
+    prog="cat",
+    description="Print files"
+)
+parser.add_argument("-n", action="store_true")
+parser.add_argument("files", nargs="+")
+args = parser.parse_args()</code></pre>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="comparison-table">
+          <h3 style="margin-bottom: 15px">📁 File Operations</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>JavaScript</th>
+                <th>Python</th>
+                <th>Key Differences</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <code>const content = await readFile(file, "utf-8");</code>
+                </td>
+                <td>
+                  <code
+                    >with open(file, "r", encoding="utf-8") as f:<br />&nbsp;&nbsp;content
+                    = f.read()</code
+                  >
+                </td>
+                <td>Python uses context managers</td>
+              </tr>
+              <tr>
+                <td><code>const files = await readdir(dir);</code></td>
+                <td><code>files = os.listdir(dir)</code></td>
+                <td>Python is synchronous by default</td>
+              </tr>
+              <tr>
+                <td><code>Buffer.byteLength(text, "utf8")</code></td>
+                <td><code>len(text.encode("utf-8"))</code></td>
+                <td>Different byte counting methods</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="comparison-table">
+          <h3 style="margin-bottom: 15px">🔤 String Operations</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>JavaScript</th>
+                <th>Python</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>text.split("\n")</code></td>
+                <td><code>text.split("\n")</code></td>
+                <td>Split by newlines (same!)</td>
+              </tr>
+              <tr>
+                <td><code>text.trim().split(/\s+/).filter(Boolean)</code></td>
+                <td><code>text.strip().split()</code></td>
+                <td>Split into words</td>
+              </tr>
+              <tr>
+                <td><code>num.toString().padStart(6)</code></td>
+                <td><code>str(num).rjust(6)</code></td>
+                <td>Right-align numbers</td>
+              </tr>
+              <tr>
+                <td><code>array.join(" ")</code></td>
+                <td><code>" ".join(list)</code></td>
+                <td>Join with spaces</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="interactive-example">
+          <h3>🎯 Complete Side-by-Side: Cat Command</h3>
+          <div style="display: grid; grid-template-columns: 1fr; gap: 20px">
+            <div>
+              <h4 style="color: #ffd89b; margin-bottom: 10px">
+                JavaScript Version
+              </h4>
+              <div class="code-container">
+                <div class="code-content">
+                  <pre><code>import { program } from "commander";
+import { readFile } from "node:fs/promises";
+
+program
+  .name("cat")
+  .option("-n", "Number lines")
+  .argument("&lt;files...&gt;", "Files")
+  .parse();
+
+const options = program.opts();
+const files = program.args;
+
+for (const file of files) {
+  try {
+    const content = await readFile(file, "utf-8");
+    const lines = content.split("\n");
+    
+    lines.forEach((line, i) => {
+      let prefix = "";
+      if (options.n) {
+        prefix = (i + 1).toString().padStart(6) + "  ";
+      }
+      console.log(prefix + line);
+    });
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+  }
+}</code></pre>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 style="color: #ffd89b; margin-bottom: 10px">
+                Python Version
+              </h4>
+              <div class="code-container">
+                <div class="code-content">
+                  <pre><code>#!/usr/bin/env python3
+import argparse
+import sys
+
+def main():
+    parser = argparse.ArgumentParser(prog="cat")
+    parser.add_argument("-n", action="store_true")
+    parser.add_argument("files", nargs="+")
+    args = parser.parse_args()
+    
+    for file in args.files:
+        try:
+            with open(file, "r", encoding="utf-8") as f:
+                content = f.read()
+            lines = content.split("\n")
+            
+            for i, line in enumerate(lines):
+                prefix = ""
+                if args.n:
+                    prefix = str(i + 1).rjust(6) + "  "
+                print(prefix + line)
+        except Exception as error:
+            print(f"Error: {error}", file=sys.stderr)
+
+if __name__ == "__main__":
+    main()</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="concept-title">🏃‍♂️ JavaScript Strengths</div>
+            <div class="concept-description">
+              • Async/await built-in<br />
+              • Compact syntax<br />
+              • Great for I/O heavy tasks<br />
+              • Node.js ecosystem
+            </div>
+          </div>
+          <div class="concept-card">
+            <div class="concept-title">🐍 Python Strengths</div>
+            <div class="concept-description">
+              • More readable syntax<br />
+              • Excellent error handling<br />
+              • Rich standard library<br />
+              • Better for text processing
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lesson 6: Practice -->
+      <div class="lesson-content" id="lesson-practice">
+        <h2 class="lesson-title">💪 Practice Challenges</h2>
+
+        <p style="font-size: 1.1rem; margin-bottom: 25px">
+          Ready to test your skills? Try building these CLI tools from scratch!
+        </p>
+
+        <div class="concept-grid">
+          <div class="concept-card" onclick="showChallenge('echo')">
+            <div class="concept-title">🔊 Challenge 1: Echo Command</div>
+            <div class="concept-description">
+              Build a simple echo command that prints arguments to stdout.
+              <br /><strong>Difficulty:</strong> Beginner <br /><strong
+                >New Concepts:</strong
+              >
+              Basic argparse, string joining
+            </div>
+            <button class="try-it-btn">Try This Challenge</button>
+          </div>
+
+          <div class="concept-card" onclick="showChallenge('head')">
+            <div class="concept-title">📄 Challenge 2: Head Command</div>
+            <div class="concept-description">
+              Show the first N lines of files (default 10).
+              <br /><strong>Difficulty:</strong> Intermediate <br /><strong
+                >New Concepts:</strong
+              >
+              Default values, list slicing
+            </div>
+            <button class="try-it-btn">Try This Challenge</button>
+          </div>
+
+          <div class="concept-card" onclick="showChallenge('grep')">
+            <div class="concept-title">🔍 Challenge 3: Simple Grep</div>
+            <div class="concept-description">
+              Search for patterns in files and show matching lines.
+              <br /><strong>Difficulty:</strong> Advanced <br /><strong
+                >New Concepts:</strong
+              >
+              String searching, regex
+            </div>
+            <button class="try-it-btn">Try This Challenge</button>
+          </div>
+
+          <div class="concept-card" onclick="showChallenge('tree')">
+            <div class="concept-title">🌳 Challenge 4: Tree Command</div>
+            <div class="concept-description">
+              Display directory structure in tree format.
+              <br /><strong>Difficulty:</strong> Expert <br /><strong
+                >New Concepts:</strong
+              >
+              Recursion, directory traversal
+            </div>
+            <button class="try-it-btn">Try This Challenge</button>
+          </div>
+        </div>
+
+        <!-- Challenge Details (Hidden by default) -->
+        <div id="challenge-details" style="display: none; margin-top: 30px">
+          <!-- Will be populated by JavaScript -->
+        </div>
+
+        <div class="interactive-example">
+          <h3>🎓 Your Learning Path</h3>
+          <div class="step-by-step">
+            <div class="step">
+              <span class="step-number">✅</span>
+              <strong>You've Learned:</strong>
+              <ul style="margin-left: 40px; margin-top: 10px">
+                <li>Python CLI basics and structure</li>
+                <li>Argparse for command-line arguments</li>
+                <li>File handling and error management</li>
+                <li>Common CLI patterns and best practices</li>
+                <li>How to convert JavaScript tools to Python</li>
+              </ul>
+            </div>
+            <div class="step">
+              <span class="step-number">🚀</span>
+              <strong>Next Steps:</strong>
+              <ul style="margin-left: 40px; margin-top: 10px">
+                <li>Complete the practice challenges</li>
+                <li>Build your own custom CLI tool</li>
+                <li>Learn about packaging with setuptools</li>
+                <li>Explore advanced libraries like Click or Typer</li>
+                <li>Add your tools to PATH for system-wide use</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentLesson = "basics";
+      let completedLessons = new Set(["basics"]);
+
+      // Challenge details data
+      const challenges = {
+        echo: {
+          title: "🔊 Echo Command Challenge",
+          description:
+            "Build a command that prints its arguments, with options for newlines and escaping.",
+          requirements: [
+            "Accept multiple arguments and print them separated by spaces",
+            "Add -n flag to suppress trailing newline",
+            "Add -e flag to enable escape sequence interpretation",
+            "Handle empty input gracefully",
+          ],
+          starter: `#!/usr/bin/env python3
+import argparse
+import sys
+
+def main():
+    parser = argparse.ArgumentParser(prog="echo", description="Display a line of text")
+    # Add your arguments here
+    
+    args = parser.parse_args()
+    
+    # Your implementation here
+    
+if __name__ == "__main__":
+    main()`,
+          solution: `#!/usr/bin/env python3
+import argparse
+import sys
+
+def main():
+    parser = argparse.ArgumentParser(prog="echo", description="Display a line of text")
+    parser.add_argument("-n", action="store_true", help="Do not output trailing newline")
+    parser.add_argument("-e", action="store_true", help="Enable escape sequence interpretation")
+    parser.add_argument("text", nargs="*", help="Text to display")
+    
+    args = parser.parse_args()
+    
+    # Join all arguments with spaces
+    output = " ".join(args.text)
+    
+    # Handle escape sequences if -e flag is used
+    if args.e:
+        output = output.replace("\\\\n", "\\n").replace("\\\\t", "\\t")
+    
+    # Print with or without newline
+    if args.n:
+        print(output, end="")
+    else:
+        print(output)
+
+if __name__ == "__main__":
+    main()`,
+        },
+        head: {
+          title: "📄 Head Command Challenge",
+          description:
+            "Show the first N lines of files, just like the Unix head command.",
+          requirements: [
+            "Default to showing first 10 lines",
+            "Add -n flag to specify number of lines",
+            "Handle multiple files with headers",
+            "Handle files with fewer lines than requested",
+          ],
+          starter: `#!/usr/bin/env python3
+import argparse
+import sys
+
+def main():
+    parser = argparse.ArgumentParser(prog="head", description="Output first part of files")
+    # Add your arguments here
+    
+    args = parser.parse_args()
+    
+    # Your implementation here
+    
+if __name__ == "__main__":
+    main()`,
+          solution: `#!/usr/bin/env python3
+import argparse
+import sys
+
+def main():
+    parser = argparse.ArgumentParser(prog="head", description="Output first part of files")
+    parser.add_argument("-n", type=int, default=10, help="Number of lines to show")
+    parser.add_argument("files", nargs="+", help="Files to read")
+    
+    args = parser.parse_args()
+    
+    for i, filename in enumerate(args.files):
+        try:
+            # Show filename header for multiple files
+            if len(args.files) > 1:
+                if i > 0:
+                    print()  # Blank line between files
+                print(f"==> {filename} <==")
+            
+            with open(filename, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+            
+            # Show first n lines
+            for line in lines[:args.n]:
+                print(line, end="")  # readlines() keeps newlines
+                
+        except FileNotFoundError:
+            print(f"head: {filename}: No such file or directory", file=sys.stderr)
+        except Exception as error:
+            print(f"head: {filename}: {error}", file=sys.stderr)
+
+if __name__ == "__main__":
+    main()`,
+        },
+        grep: {
+          title: "🔍 Simple Grep Challenge",
+          description:
+            "Search for patterns in files and display matching lines.",
+          requirements: [
+            "Search for a pattern in one or more files",
+            "Add -i flag for case-insensitive search",
+            "Add -n flag to show line numbers",
+            "Handle multiple files with filename prefixes",
+          ],
+          starter: `#!/usr/bin/env python3
+import argparse
+import sys
+import re
+
+def main():
+    parser = argparse.ArgumentParser(prog="grep", description="Search text patterns in files")
+    # Add your arguments here
+    
+    args = parser.parse_args()
+    
+    # Your implementation here
+    
+if __name__ == "__main__":
+    main()`,
+          solution: `#!/usr/bin/env python3
+import argparse
+import sys
+import re
+
+def main():
+    parser = argparse.ArgumentParser(prog="grep", description="Search text patterns in files")
+    parser.add_argument("-i", action="store_true", help="Case-insensitive search")
+    parser.add_argument("-n", action="store_true", help="Show line numbers")
+    parser.add_argument("pattern", help="Pattern to search for")
+    parser.add_argument("files", nargs="+", help="Files to search")
+    
+    args = parser.parse_args()
+    
+    # Compile regex pattern
+    flags = re.IGNORECASE if args.i else 0
+    try:
+        regex = re.compile(args.pattern, flags)
+    except re.error as e:
+        print(f"grep: {e}", file=sys.stderr)
+        return
+    
+    for filename in args.files:
+        try:
+            with open(filename, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+            
+            for line_num, line in enumerate(lines, 1):
+                if regex.search(line):
+                    output = ""
+                    
+                    # Add filename if multiple files
+                    if len(args.files) > 1:
+                        output += f"{filename}:"
+                    
+                    # Add line number if requested
+                    if args.n:
+                        output += f"{line_num}:"
+                    
+                    output += line.rstrip()
+                    print(output)
+                    
+        except FileNotFoundError:
+            print(f"grep: {filename}: No such file or directory", file=sys.stderr)
+        except Exception as error:
+            print(f"grep: {filename}: {error}", file=sys.stderr)
+
+if __name__ == "__main__":
+    main()`,
+        },
+        tree: {
+          title: "🌳 Tree Command Challenge",
+          description:
+            "Display directory structure in a tree format with proper indentation.",
+          requirements: [
+            "Show directory structure with tree-like formatting",
+            "Add -a flag to show hidden files",
+            "Add -d flag to show directories only",
+            "Use Unicode characters for tree branches",
+          ],
+          starter: `#!/usr/bin/env python3
+import argparse
+import os
+import sys
+
+def main():
+    parser = argparse.ArgumentParser(prog="tree", description="Display directory tree")
+    # Add your arguments here
+    
+    args = parser.parse_args()
+    
+    # Your implementation here
+    
+if __name__ == "__main__":
+    main()`,
+          solution: `#!/usr/bin/env python3
+import argparse
+import os
+import sys
+
+def print_tree(path, args, prefix="", is_last=True):
+    """Recursively print directory tree"""
+    if not os.path.exists(path):
+        return
+    
+    # Get directory name
+    dirname = os.path.basename(path) or path
+    
+    # Print current directory
+    connector = "└── " if is_last else "├── "
+    print(f"{prefix}{connector}{dirname}")
+    
+    # Update prefix for children
+    extension = "    " if is_last else "│   "
+    new_prefix = prefix + extension
+    
+    try:
+        # Get directory contents
+        items = os.listdir(path)
+        
+        # Filter hidden files if not -a
+        if not args.a:
+            items = [item for item in items if not item.startswith('.')]
+        
+        # Filter to directories only if -d
+        if args.d:
+            items = [item for item in items if os.path.isdir(os.path.join(path, item))]
+        
+        # Sort items
+        items.sort()
+        
+        # Print each item
+        for i, item in enumerate(items):
+            item_path = os.path.join(path, item)
+            is_last_item = i == len(items) - 1
+            
+            if os.path.isdir(item_path):
+                print_tree(item_path, args, new_prefix, is_last_item)
+            else:
+                connector = "└── " if is_last_item else "├── "
+                print(f"{new_prefix}{connector}{item}")
+                
+    except PermissionError:
+        print(f"{new_prefix}[Permission Denied]")
+
+def main():
+    parser = argparse.ArgumentParser(prog="tree", description="Display directory tree")
+    parser.add_argument("-a", action="store_true", help="Show hidden files")
+    parser.add_argument("-d", action="store_true", help="Show directories only")
+    parser.add_argument("directory", nargs="?", default=".", help="Directory to display")
+    
+    args = parser.parse_args()
+    
+    if not os.path.isdir(args.directory):
+        print(f"tree: {args.directory}: No such directory", file=sys.stderr)
+        return
+    
+    print_tree(args.directory, args)
+
+if __name__ == "__main__":
+    main()`,
+        },
+      };
+
+      function showLesson(lessonId) {
+        // Hide all lessons
+        document.querySelectorAll(".lesson-content").forEach((lesson) => {
+          lesson.classList.remove("active");
+        });
+
+        // Remove active class from all buttons
+        document.querySelectorAll(".lesson-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+
+        // Show selected lesson
+        document.getElementById(`lesson-${lessonId}`).classList.add("active");
+        event.target.classList.add("active");
+
+        currentLesson = lessonId;
+        completedLessons.add(lessonId);
+        updateProgress();
+      }
+
+      function updateProgress() {
+        const totalLessons = 6;
+        const completed = completedLessons.size;
+        const percentage = (completed / totalLessons) * 100;
+
+        document.getElementById("progressBar").style.width = percentage + "%";
+      }
+
+      function selectQuizOption(option, isCorrect) {
+        // Remove any existing classes
+        document.querySelectorAll(".quiz-option").forEach((opt) => {
+          opt.classList.remove("correct", "wrong");
+        });
+
+        // Add appropriate class
+        if (isCorrect) {
+          option.classList.add("correct");
+          setTimeout(() => {
+            alert(
+              "🎉 Correct! Directory processing reads directories, and accumulator pattern keeps totals."
+            );
+          }, 100);
+        } else {
+          option.classList.add("wrong");
+          setTimeout(() => {
+            alert(
+              "❌ Not quite. Think about what operations you need: reading directories and keeping counts."
+            );
+          }, 100);
+        }
+      }
+
+      function showChallenge(challengeId) {
+        const challenge = challenges[challengeId];
+        const detailsDiv = document.getElementById("challenge-details");
+
+        detailsDiv.innerHTML = `
+                <div class="interactive-example">
+                    <h3>${challenge.title}</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 20px;">${
+                      challenge.description
+                    }</p>
+                    
+                    <h4 style="color: #ffd89b; margin-bottom: 10px;">Requirements:</h4>
+                    <ul style="margin-bottom: 20px;">
+                        ${challenge.requirements
+                          .map((req) => `<li>${req}</li>`)
+                          .join("")}
+                    </ul>
+                    
+                    <div style="display: grid; grid-template-columns:  1fr; gap: 20px;">
+                        <div>
+                            <h4 style="color: #ffd89b; margin-bottom: 10px;">Starter Code:</h4>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <div class="code-title">Your starting point</div>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>${challenge.starter}</pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="color: #ffd89b; margin-bottom: 10px;">Solution:</h4>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <div class="code-title">Complete solution</div>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>${challenge.solution}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+        detailsDiv.style.display = "block";
+        detailsDiv.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function copyCode(button) {
+        const codeElement = button
+          .closest(".code-container")
+          .querySelector("pre");
+        const text = codeElement.textContent;
+
+        navigator.clipboard.writeText(text).then(() => {
+          const originalText = button.textContent;
+          button.textContent = "Copied!";
+          button.style.background = "#48bb78";
+
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.style.background = "#667eea";
+          }, 2000);
+        });
+      }
+
+      // Initialize
+      updateProgress();
+    </script>
+  </body>
+</html>
